@@ -129,6 +129,9 @@
     if (cfg.format === 'carousel') el.innerHTML = renderCarousel(cfg, SUBS[key]);
     else if (cfg.format === 'reels') el.innerHTML = renderReels(cfg);
     else el.innerHTML = renderPost(cfg, SUBS[key]);
+    // selo de autoria preso na peça
+    const frame = $('.post-wrap, .post, .reels', el);
+    if (frame) frame.insertAdjacentHTML('beforeend', `<span class="made-by"><img src="assets/igor.webp" alt="" width="28" height="28" /><span><b>Criado por Igor Souza</b>${cfg.format === 'reels' ? 'roteiro, key visual e edição' : 'pesquisa, roteiro e key visual'}</span></span>`);
   });
 
   /* ---------- Conteúdo programado ---------- */
@@ -167,6 +170,71 @@
         : `<div class="ref__media">${placeholder('Imagem')}</div>`;
       return `<div class="ref">${media}<div class="ref__info"><b>${esc(it.brand || '')}</b><span>${esc(it.handle || '')}</span></div></div>`;
     }).join('');
+  }
+
+  /* ---------- Circuito: trilhas ligando cada habilidade ao Igor ---------- */
+  const circuit = $('.circuit');
+  if (circuit) {
+    const svg = $('.circuit__svg', circuit);
+    const photo = $('.circuit__photo', circuit);
+    const aiChip = $('.circuit__ai-chip', circuit);
+    const skills = $$('.skill', circuit);
+    const NS = 'http://www.w3.org/2000/svg';
+    const add = (tag, attrs, extra = {}) => {
+      const el = document.createElementNS(NS, tag);
+      Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
+      Object.entries(extra).forEach(([k, v]) => el.style.setProperty(k, v));
+      svg.appendChild(el);
+      return el;
+    };
+    const draw = () => {
+      const box = circuit.getBoundingClientRect();
+      if (!box.width) return;
+      svg.setAttribute('viewBox', `0 0 ${box.width} ${box.height}`);
+      svg.innerHTML = '';
+      const rel = (r) => ({ l: r.left - box.left, r: r.right - box.left, t: r.top - box.top, b: r.bottom - box.top, cy: r.top - box.top + r.height / 2, cx: r.left - box.left + r.width / 2 });
+      const P = rel(photo.getBoundingClientRect());
+      const A = aiChip ? rel(aiChip.getBoundingClientRect()) : null;
+      const xEnd = rel(skills[0].getBoundingClientRect()).l; // chegada: lado esquerdo das habilidades
+      const r = 10;
+      const route = (x0, y0, bus, y) => {
+        const dy = y - y0;
+        const s = Math.sign(dy) || 1;
+        const rr = Math.min(r, Math.abs(dy) / 2);
+        return Math.abs(dy) < 1
+          // o caminho começa no card do Igor e termina na habilidade: a luz sai de você e vai para as skills
+          ? `M ${x0} ${y0} H ${xEnd}`
+          : `M ${x0} ${y0} H ${bus - rr} Q ${bus} ${y0} ${bus} ${y0 + s * rr} V ${y - s * rr} Q ${bus} ${y} ${bus + rr} ${y} H ${xEnd}`;
+      };
+      skills.forEach((sk, k) => {
+        const fromAi = sk.dataset.src === 'ai' && A;
+        const x0 = fromAi ? A.r : P.r;
+        const y0 = fromAi ? A.cy : P.cy;
+        const bus = x0 + (xEnd - x0) * (fromAi ? 0.62 : 0.4);
+        const d = route(x0, y0, bus, rel(sk.getBoundingClientRect()).cy);
+        add('path', { d, class: 'circuit__trace' + (fromAi ? ' circuit__trace--ai' : ''), pathLength: 100 }, { '--d': k });
+        add('path', { d, class: 'circuit__flow' + (fromAi ? ' circuit__flow--ai' : ''), pathLength: 100 }, { '--d': k });
+        add('circle', { cx: xEnd, cy: rel(sk.getBoundingClientRect()).cy, r: 3, class: 'circuit__pin' + (fromAi ? ' circuit__pin--ai' : '') });
+      });
+      // comando: Igor → IA (linha vertical tracejada, mostra quem direciona)
+      if (A) {
+        const d = `M ${P.cx} ${P.b + 2} V ${A.t - 2}`;
+        add('path', { d, class: 'circuit__cmd', pathLength: 100 });
+        add('path', { d, class: 'circuit__flow circuit__flow--cmd', pathLength: 100 }, { '--d': 0 });
+        add('circle', { cx: A.r, cy: A.cy, r: 4, class: 'circuit__pin circuit__pin--aihub' });
+      }
+      add('circle', { cx: P.r, cy: P.cy, r: 4, class: 'circuit__pin circuit__pin--hub' });
+    };
+    draw();
+    if ('ResizeObserver' in window) new ResizeObserver(draw).observe(circuit);
+    window.addEventListener('load', draw);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(draw);
+    // redesenha quando as habilidades terminam de entrar (elas chegam deslizando)
+    const circuitSlide = circuit.closest('.slide');
+    if (circuitSlide && 'MutationObserver' in window) {
+      new MutationObserver(() => { if (circuitSlide.classList.contains('is-in')) setTimeout(draw, 1000); })
+        .observe(circuitSlide, { attributes: true, attributeFilter: ['class'] });
+    }
   }
 
   /* ---------- Carrosséis ---------- */
@@ -298,15 +366,16 @@
   /* Transição de cor ligada à rolagem: o fundo escurece aos poucos ao entrar nos slides escuros */
   const backdrop = $('.theme-backdrop');
   // Slides escuros seguidos viram um único bloco, para o fundo não clarear entre eles
+  const solidSlides = slides.filter((s) => s.classList.contains('slide--solid'));
   const darkGroups = [];
   slides.forEach((s, k) => {
-    if (!s.classList.contains('slide--dark')) return;
+    if (!s.classList.contains('slide--dark') || s.classList.contains('slide--solid')) return;
     const last = darkGroups[darkGroups.length - 1];
     if (last && last.end === k - 1) { last.end = k; last.last = s; } else darkGroups.push({ start: k, end: k, first: s, last: s });
   });
   const clamp01 = (v) => Math.max(0, Math.min(1, v));
   const updateTheme = () => {
-    if (!backdrop || !darkGroups.length) return;
+    if (!backdrop) return;
     const vh = window.innerHeight;
     let t = 0;
     darkGroups.forEach((g) => {
@@ -317,7 +386,9 @@
       t = Math.max(t, Math.min(enter, leave));
     });
     backdrop.style.opacity = t.toFixed(3);
-    document.documentElement.classList.toggle('theme-dark', t > 0.5);
+    // slides pretos fixos (sem transição): o topo fica escuro quando um deles está atrás dele
+    const solidUnderTop = solidSlides.some((s) => { const r = s.getBoundingClientRect(); return r.top <= 60 && r.bottom > 60; });
+    document.documentElement.classList.toggle('theme-dark', t > 0.5 || solidUnderTop);
   };
 
   /* Slide 03: o processo acende etapa por etapa conforme a rolagem */

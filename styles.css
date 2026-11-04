@@ -1174,3 +1174,145 @@ button.ref__media:hover { transform: translateY(-3px); box-shadow: 0 18px 40px -
 .slide--dark .line-card__cover { border-color: rgba(255,255,255,.12); }
 .slide--dark .line-card p b { color: #fff; }
 .slide--dark .intro-copy .footline strong { color: #fff; }
+
+/* =========================================================
+   Slide 13: painel "circuito" (foto + habilidades enfileiradas)
+   ========================================================= */
+.circuit {
+  position: relative; width: min(600px, 46vw); padding: clamp(22px, 3.2vh, 34px) clamp(22px, 2.4vw, 34px);
+  display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: clamp(70px, 8vw, 120px); align-items: center;
+  border-radius: 26px; overflow: hidden; color: #f4f3ef;
+  background:
+    radial-gradient(60% 70% at 20% 50%, rgba(59,109,255,.28), transparent 70%),
+    radial-gradient(50% 60% at 90% 10%, rgba(255,122,69,.18), transparent 70%),
+    linear-gradient(160deg, #121420, #0a0b10);
+  box-shadow: 0 0 0 1px rgba(255,255,255,.06) inset, 0 40px 90px -40px rgba(10,12,30,.7);
+}
+.circuit::before { content: ''; position: absolute; inset: 0; pointer-events: none; opacity: .5;
+  background-image: linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px);
+  background-size: 28px 28px; mask-image: radial-gradient(80% 80% at 40% 50%, #000 40%, transparent 100%); -webkit-mask-image: radial-gradient(80% 80% at 40% 50%, #000 40%, transparent 100%); }
+.circuit__svg { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; overflow: visible; }
+.circuit__trace { fill: none; stroke: rgba(255,255,255,.16); stroke-width: 1.4; stroke-dasharray: 100; stroke-dashoffset: 0; }
+.circuit__flow { fill: none; stroke: #7aa2ff; stroke-width: 2.2; stroke-linecap: round; stroke-dasharray: 4 96; filter: drop-shadow(0 0 4px rgba(122,162,255,.9)); animation: circuit-flow 2.6s linear infinite; animation-delay: calc(var(--d) * -.45s); }
+@keyframes circuit-flow { from { stroke-dashoffset: 100; } to { stroke-dashoffset: 0; } }
+.circuit__pin { fill: #0a0b10; stroke: rgba(255,255,255,.45); stroke-width: 1.4; }
+.circuit__pin--hub { fill: #3b6dff; stroke: #a9c1ff; filter: drop-shadow(0 0 6px rgba(59,109,255,.9)); }
+.circuit__me { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
+.circuit__photo { position: relative; display: block; width: clamp(96px, 14vh, 128px); aspect-ratio: 1; border-radius: 22px; padding: 3px;
+  background: linear-gradient(135deg, #3b6dff, #a08bff 50%, #ff7a45); box-shadow: 0 0 0 6px rgba(59,109,255,.12), 0 18px 50px -12px rgba(59,109,255,.75); animation: photo-glow 3.2s ease-in-out infinite; }
+.circuit__photo img { width: 100%; height: 100%; object-fit: cover; border-radius: 19px; display: block; }
+@keyframes photo-glow { 0%, 100% { box-shadow: 0 0 0 6px rgba(59,109,255,.12), 0 18px 50px -12px rgba(59,109,255,.75); } 50% { box-shadow: 0 0 0 10px rgba(59,109,255,.06), 0 18px 60px -8px rgba(160,139,255,.85); } }
+.circuit__name { display: inline-flex; align-items: center; gap: 5px; margin-top: 8px; font-size: 14.5px; font-weight: 600; color: #fff; }
+.circuit__role { font-size: 12px; color: rgba(244,243,239,.55); }
+.circuit__skills { position: relative; z-index: 2; list-style: none; display: flex; flex-direction: column; gap: clamp(8px, 1.4vh, 12px); }
+.skill { display: flex; align-items: center; gap: 12px; padding: 8px 14px 8px 8px; border-radius: 14px;
+  background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.09); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  transition: transform .5s cubic-bezier(.2,.8,.2,1), opacity .5s ease, background .25s ease, border-color .25s ease; }
+.skill:hover { background: rgba(255,255,255,.09); border-color: rgba(122,162,255,.45); }
+.skill b { font-size: 14.5px; font-weight: 600; color: #fff; white-space: nowrap; }
+.skill__icon { flex: none; width: 38px; height: 38px; border-radius: 11px; display: grid; place-items: center;
+  background: linear-gradient(145deg, var(--c2), var(--c1)); box-shadow: 0 6px 18px -6px var(--c1), inset 0 1px 0 rgba(255,255,255,.35); }
+.skill__icon svg { width: 19px; height: 19px; fill: none; stroke: #fff; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+.skill__icon--light svg { stroke: #1b1d24; }
+/* Entrada: habilidades aparecem e trilhas se desenham quando o slide entra */
+.js .slide:not(.is-in) .skill { opacity: 0; transform: translateX(24px); }
+.js .slide.is-in .skill { transition-delay: calc(.2s + var(--d) * .09s); }
+.js .slide:not(.is-in) .circuit__trace { stroke-dashoffset: 100; }
+.js .slide.is-in .circuit__trace { transition: stroke-dashoffset 1.1s cubic-bezier(.2,.7,.2,1); transition-delay: calc(.35s + var(--d) * .09s); }
+.js .slide:not(.is-in) .circuit__flow { opacity: 0; }
+@media (prefers-reduced-motion: reduce) { .circuit__flow, .circuit__photo { animation: none; } }
+@media (max-width: 1024px) { .circuit { width: 100%; } }
+@media (max-width: 560px) {
+  .circuit { grid-template-columns: 1fr; row-gap: 20px; }
+  .circuit__svg { display: none; }
+  .circuit__skills { display: grid; grid-template-columns: 1fr 1fr; }
+  .skill b { white-space: normal; font-size: 13px; }
+}
+
+/* Slide 13 no escuro: painel com contorno para destacar do fundo */
+.slide--dark .circuit { box-shadow: 0 0 0 1px rgba(255,255,255,.1) inset, 0 0 80px -20px rgba(59,109,255,.35); }
+
+/* Slide preto fixo, sem transição de cor na rolagem */
+.slide--solid { background: #0b0b0a; }
+
+/* ---------- Circuito v2: direção (Igor) x produção (IA acelera) ---------- */
+.circuit--ai { grid-template-columns: auto minmax(0, 1fr); row-gap: 0; }
+.circuit__left { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; gap: clamp(40px, 7vh, 64px); }
+.circuit--ai .circuit__name { margin-top: 6px; }
+.circuit--ai .circuit__role { color: #7aa2ff; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; font-size: 11px; }
+.circuit__ai { display: flex; align-items: center; gap: 10px; }
+.circuit__ai-chip { position: relative; width: 46px; height: 46px; border-radius: 13px; display: grid; place-items: center;
+  background: linear-gradient(145deg, #ffb08a, #ff6a1a); box-shadow: 0 8px 24px -8px rgba(255,106,26,.8), inset 0 1px 0 rgba(255,255,255,.4); animation: ai-breathe 2.6s ease-in-out infinite; }
+.circuit__ai-chip svg { width: 22px; height: 22px; fill: #fff; stroke: none; }
+@keyframes ai-breathe { 0%, 100% { box-shadow: 0 8px 24px -8px rgba(255,106,26,.8), 0 0 0 0 rgba(255,106,26,.35); } 50% { box-shadow: 0 8px 28px -6px rgba(255,106,26,.9), 0 0 0 8px rgba(255,106,26,0); } }
+.circuit__ai-label { display: flex; flex-direction: column; line-height: 1.15; font-size: 11.5px; color: rgba(244,243,239,.55); }
+.circuit__ai-label b { font-size: 15px; color: #fff; }
+.skill-label { display: flex; align-items: center; gap: 8px; margin: 2px 0 -2px; font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
+.skill-label i { width: 8px; height: 8px; border-radius: 50%; }
+.skill-label--me { color: #9db8ff; } .skill-label--me i { background: #3b6dff; box-shadow: 0 0 8px #3b6dff; }
+.skill-label--ai { color: #ffb08a; margin-top: 8px; } .skill-label--ai i { background: #ff6a1a; box-shadow: 0 0 8px #ff6a1a; }
+.skill--ai { border-color: rgba(255,122,69,.18); }
+.circuit__trace--ai { stroke: rgba(255,154,92,.22); }
+.circuit__flow--ai { stroke: #ff9a5c; filter: drop-shadow(0 0 4px rgba(255,140,80,.9)); }
+.circuit__pin--ai { stroke: rgba(255,154,92,.6); }
+.circuit__pin--aihub { fill: #ff6a1a; stroke: #ffc2a1; filter: drop-shadow(0 0 6px rgba(255,106,26,.9)); }
+.circuit__cmd { fill: none; stroke: rgba(122,162,255,.45); stroke-width: 1.6; stroke-dasharray: 3 5; }
+.circuit__flow--cmd { stroke: #7aa2ff; animation-duration: 1.6s; }
+.circuit__note { grid-column: 1 / -1; position: relative; z-index: 2; margin-top: clamp(16px, 2.6vh, 24px); padding-top: 14px; border-top: 1px solid rgba(255,255,255,.08); font-size: 14.5px; color: rgba(244,243,239,.7); text-align: center; }
+.circuit__note b { color: #ffb08a; font-weight: 600; }
+.js .slide:not(.is-in) .circuit__cmd { opacity: 0; }
+.js .slide.is-in .circuit__cmd { transition: opacity .6s ease .3s; }
+@media (prefers-reduced-motion: reduce) { .circuit__ai-chip { animation: none; } }
+@media (max-width: 560px) { .circuit__left { flex-direction: row; justify-content: center; gap: 24px; } .skill-label { grid-column: 1 / -1; } }
+
+/* ---------- Circuito v3: tudo ligado ao Igor; IA como ferramenta P&B ---------- */
+.circuit--simple { grid-template-columns: auto minmax(0, 1fr); }
+.circuit--simple .circuit__role { color: rgba(244,243,239,.6); font-weight: 600; letter-spacing: .06em; text-transform: uppercase; font-size: 11px; }
+.circuit__tool { display: inline-flex; align-items: center; gap: 7px; margin-top: 10px; height: 30px; padding: 0 12px 0 8px; border-radius: 999px;
+  background: #fff; color: #0b0b0a; font-size: 12px; font-weight: 600; white-space: nowrap; box-shadow: 0 6px 18px -8px rgba(255,255,255,.4); }
+.circuit__tool svg { width: 15px; height: 15px; fill: #0b0b0a; stroke: none; }
+.circuit--simple .circuit__note b { color: #fff; }
+
+/* ---------- Chip "AI" acoplado ao card do Igor (preto e branco) ---------- */
+.circuit__photo { overflow: visible; }
+.ai-chip { position: absolute; right: -22px; bottom: -18px; z-index: 3; width: 54px; height: 54px; transform: rotate(-8deg); animation: ai-chip-float 4s ease-in-out infinite; }
+.ai-chip__pins { position: absolute; inset: -5px; border-radius: 16px;
+  background:
+    linear-gradient(90deg, transparent 22%, #fff 22% 30%, transparent 30% 46%, #fff 46% 54%, transparent 54% 70%, #fff 70% 78%, transparent 78%) top / 100% 3px no-repeat,
+    linear-gradient(90deg, transparent 22%, #fff 22% 30%, transparent 30% 46%, #fff 46% 54%, transparent 54% 70%, #fff 70% 78%, transparent 78%) bottom / 100% 3px no-repeat,
+    linear-gradient(0deg, transparent 22%, #fff 22% 30%, transparent 30% 46%, #fff 46% 54%, transparent 54% 70%, #fff 70% 78%, transparent 78%) left / 3px 100% no-repeat,
+    linear-gradient(0deg, transparent 22%, #fff 22% 30%, transparent 30% 46%, #fff 46% 54%, transparent 54% 70%, #fff 70% 78%, transparent 78%) right / 3px 100% no-repeat;
+  opacity: .85; }
+.ai-chip__core { position: absolute; inset: 0; border-radius: 13px; overflow: hidden; display: flex; align-items: center; justify-content: center; gap: 3px;
+  background: linear-gradient(150deg, #2a2a2a, #050505); color: #fff; font-family: var(--display); font-weight: 600; font-size: 19px; letter-spacing: -0.02em;
+  border: 1.5px solid #fff; box-shadow: 0 0 0 3px #0b0b0a, 0 12px 26px -8px rgba(0,0,0,.9), inset 0 1px 0 rgba(255,255,255,.25); }
+.ai-chip__core svg { width: 13px; height: 13px; fill: #fff; margin-top: -8px; animation: ai-spark 2.4s ease-in-out infinite; }
+.ai-chip__core::after { content: ''; position: absolute; top: -50%; left: -80%; width: 50%; height: 200%; transform: rotate(25deg);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.55), transparent); animation: ai-shine 3.6s ease-in-out infinite; }
+@keyframes ai-shine { 0%, 55% { left: -80%; } 85%, 100% { left: 140%; } }
+@keyframes ai-spark { 0%, 100% { transform: scale(1) rotate(0); opacity: 1; } 50% { transform: scale(.7) rotate(45deg); opacity: .7; } }
+@keyframes ai-chip-float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -3px; } }
+@media (prefers-reduced-motion: reduce) { .ai-chip, .ai-chip__core svg, .ai-chip__core::after { animation: none; } }
+
+/* ---------- Autoria: "Feito por mim, do zero" + selo na peça ---------- */
+.credits { margin-top: clamp(8px, 1.4vh, 12px); padding: 10px 14px; border-radius: var(--radius-sm); border: 1px solid rgba(47,107,255,.35); background: rgba(47,107,255,.08); display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.credits__title { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 600; color: var(--text); }
+.credits__title svg { width: 17px; height: 17px; fill: none; stroke: #7aa2ff; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.credits__list { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; }
+.credits__list li { font-size: 12px; font-weight: 500; padding: 4px 9px; border-radius: 999px; background: rgba(255,255,255,.06); border: 1px solid var(--line); color: var(--text-2); }
+.slide:not(.slide--dark) .credits__list li { background: #fff; }
+/* Selo preso na peça (post, carrossel ou Reels) */
+.post-wrap, .post, .reels { position: relative; }
+.made-by { position: absolute; z-index: 6; left: -18px; top: -16px; display: inline-flex; align-items: center; gap: 8px; padding: 5px 12px 5px 5px; border-radius: 999px;
+  background: #fff; color: #0b0b0a; box-shadow: 0 10px 28px -10px rgba(0,0,0,.6), 0 0 0 1px rgba(12,12,10,.08); transform: rotate(-3deg); pointer-events: none; }
+.made-by img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
+.made-by > span { display: flex; flex-direction: column; line-height: 1.15; font-size: 10.5px; color: #5b5a56; white-space: nowrap; }
+.made-by b { font-size: 12px; color: #0b0b0a; font-weight: 700; }
+.reels .made-by { left: -22px; top: 18px; }
+.post .made-by { left: -18px; top: -16px; }
+.post-wrap > .post .made-by { display: none; }
+@media (max-width: 760px) { .made-by { left: 6px; top: -14px; } .reels .made-by { left: 6px; } }
+/* deixa o selo aparecer para fora da moldura sem cortar */
+.line-media > .post { overflow: visible; }
+.reels--cover { overflow: visible; }
+.reels--cover .reels__cover, .reels--cover::before { border-radius: 30px; }
