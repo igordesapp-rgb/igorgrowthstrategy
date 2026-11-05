@@ -24,7 +24,7 @@ window.STOX_CONTENT = {
       'assets/ripple-03.webp',
       'assets/ripple-04.webp',
       'assets/ripple-05.webp',
-      'assets/ripple-06.webp',
+      'assets/save-for-later.webp', // último slide: "Save this for later." (Figma · Frame 18)
     ],
     slideSlots: 6,
     upcoming: [],
@@ -34,10 +34,10 @@ window.STOX_CONTENT = {
   marketBrief: {
     format: 'carousel',
     slides: [
-      'assets/brief-01.webp',
+      'assets/brief-cover.webp', // capa (Figma · Frame 14)
       'assets/brief-02.webp',
       'assets/brief-03.webp',
-      'assets/brief-04.webp',
+      'assets/save-for-later.webp', // último slide: "Save this for later." (Figma · Frame 18)
     ],
     slideSlots: 4,
     upcoming: [],
@@ -55,7 +55,7 @@ window.STOX_CONTENT = {
 
   insideStory: {
     format: 'reels',
-    youtubeId: 'CkU8lEy8RkY', // youtube.com/shorts/CkU8lEy8RkY
+    youtubeId: 'CkU8lEy8RkY', // https://www.youtube.com/watch?v=CkU8lEy8RkY
     cover: 'assets/inside-story.webp',
     upcoming: [],
     upcomingSlots: 4,
@@ -67,13 +67,21 @@ window.STOX_CONTENT = {
        image  → print do post/Reels (coloque em /assets)
        brand  → nome da marca
        handle → @ do perfil
-       views  → ex.: '2,4 mi de visualizações'
+       views  → ex.: '2,4 mi de visualizações' (aparece como texto
+                embaixo do card; para traduzir, é só trocar aqui)
+     brand e handle são opcionais: se ficarem vazios, o card mostra
+     só as visualizações.
      Enquanto faltar, aparece um espaço reservado ("slots").
      ---------------------------------------------------------- */
   references: {
     slots: 6,
     items: [
-      // { image: 'assets/ref-01.webp', brand: 'Nome da marca', handle: '@perfil', views: '2,4 mi de visualizações' },
+      { image: 'assets/ref-01.webp', brand: '', handle: '', views: '204 mil visualizações' },
+      { image: 'assets/ref-02.webp', brand: '', handle: '', views: '3,2 mi de visualizações' },
+      { image: 'assets/ref-07.webp', brand: '', handle: '', views: '2,8 mi de visualizações' },
+      { image: 'assets/ref-04.webp', brand: 'Finshots', handle: '', views: '1.788 curtidas e 12 comentários' },
+      { image: 'assets/ref-05.webp', brand: '', handle: '', views: '748 mil visualizações' },
+      { image: 'assets/ref-08.webp', brand: '', handle: '', views: '1,3 mi de visualizações' },
     ],
   },
 };

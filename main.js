@@ -71,19 +71,10 @@
               <button type="button" class="zoom-btn" data-zoom="carousel" aria-label="Ampliar o carrossel para ler melhor">${I.zoom}<span>Ampliar</span></button>
             </div>
             <div class="post__actions">${I.heart}${I.comment}${I.share}<div class="dots">${'<i></i>'.repeat(total)}</div><span class="save">${I.save}</span></div>
-            <p class="post__caption"><b>stoxradar</b>Arraste para o lado e acompanhe a história até o fim. <span class="more">… mais</span></p>
+            <p class="post__caption"><b>stoxradar</b>Clique em Ampliar e acompanhe a história até o fim. <span class="more">… mais</span></p>
           </div>
         </div>
-        ${total > 1 ? `<div class="carousel-controls">
-          <button class="carousel__nav carousel__nav--prev" aria-label="Slide anterior" disabled>‹</button>
-          <button class="swipe-hint" type="button" aria-label="Ver o próximo slide do carrossel">
-            <span class="swipe-hint__hand" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><path d="M9 11V5.5a1.5 1.5 0 0 1 3 0V10m0-1.5a1.5 1.5 0 0 1 3 0V11m0-1a1.5 1.5 0 0 1 3 0v4.5a6 6 0 0 1-6 6h-.6a6 6 0 0 1-4.6-2.2L4 15.2a1.6 1.6 0 0 1 2.4-2.1L9 15"/></svg>
-            </span>
-            <span class="swipe-hint__text"><span class="t-desk">Clique na seta para ver o próximo</span><span class="t-touch">Deslize para o lado</span> · <b data-swipe-count>1 de ${total}</b></span>
-          </button>
-          <button class="carousel__nav carousel__nav--next" aria-label="Próximo slide">›</button>
-        </div>` : ''}
+        <!-- sem barra de setas embaixo: a pessoa abre o carrossel pelo botão "Ampliar" -->
       </div>`;
   }
 
@@ -129,9 +120,7 @@
     if (cfg.format === 'carousel') el.innerHTML = renderCarousel(cfg, SUBS[key]);
     else if (cfg.format === 'reels') el.innerHTML = renderReels(cfg);
     else el.innerHTML = renderPost(cfg, SUBS[key]);
-    // selo de autoria preso na peça
-    const frame = $('.post-wrap, .post, .reels', el);
-    if (frame) frame.insertAdjacentHTML('beforeend', `<span class="made-by"><img src="assets/igor.webp" alt="" width="28" height="28" /><span><b>Criado por Igor Souza</b>${cfg.format === 'reels' ? 'roteiro, key visual e edição' : 'pesquisa, roteiro e key visual'}</span></span>`);
+    // (o selo "Criado por Igor Souza" preso na peça foi removido a pedido)
   });
 
   /* ---------- Conteúdo programado ---------- */
@@ -166,9 +155,12 @@
         return `<div class="ref ref--empty"><div class="ref__media">${placeholder(`Referência ${String(i + 1).padStart(2, '0')}`)}</div><div class="ref__info"><b>Marca</b><span>@perfil</span></div></div>`;
       }
       const media = it.image
-        ? `<button type="button" class="ref__media" data-lightbox="${esc(it.image)}" aria-label="Ampliar referência de ${esc(it.brand || '')}"><img src="${esc(it.image)}" alt="" loading="lazy" />${it.views ? `<span class="ref__views">${I.eye}${esc(it.views)}</span>` : ''}</button>`
+        ? `<button type="button" class="ref__media" data-lightbox="${esc(it.image)}" aria-label="Ampliar referência ${String(i + 1).padStart(2, '0')}${it.brand ? ` de ${esc(it.brand)}` : ''}"><img src="${esc(it.image)}" alt="" loading="lazy" /></button>`
         : `<div class="ref__media">${placeholder('Imagem')}</div>`;
-      return `<div class="ref">${media}<div class="ref__info"><b>${esc(it.brand || '')}</b><span>${esc(it.handle || '')}</span></div></div>`;
+      // visualizações escritas embaixo do card (texto, para dar para traduzir)
+      const views = it.views ? `<span class="ref__count">${I.eye}${esc(it.views)}</span>` : '';
+      const who = [it.brand ? `<b>${esc(it.brand)}</b>` : '', it.handle ? `<span>${esc(it.handle)}</span>` : ''].join('');
+      return `<div class="ref">${media}<div class="ref__info">${views}${who}</div></div>`;
     }).join('');
   }
 
@@ -197,15 +189,48 @@
       const A = aiChip ? rel(aiChip.getBoundingClientRect()) : null;
       const xEnd = rel(skills[0].getBoundingClientRect()).l; // chegada: lado esquerdo das habilidades
       const r = 10;
-      const route = (x0, y0, bus, y) => {
+      const route = (x0, y0, bus, y, x1 = xEnd) => {
         const dy = y - y0;
         const s = Math.sign(dy) || 1;
         const rr = Math.min(r, Math.abs(dy) / 2);
         return Math.abs(dy) < 1
           // o caminho começa no card do Igor e termina na habilidade: a luz sai de você e vai para as skills
-          ? `M ${x0} ${y0} H ${xEnd}`
-          : `M ${x0} ${y0} H ${bus - rr} Q ${bus} ${y0} ${bus} ${y0 + s * rr} V ${y - s * rr} Q ${bus} ${y} ${bus + rr} ${y} H ${xEnd}`;
+          ? `M ${x0} ${y0} H ${x1}`
+          : `M ${x0} ${y0} H ${bus - rr} Q ${bus} ${y0} ${bus} ${y0 + s * rr} V ${y - s * rr} Q ${bus} ${y} ${bus + rr} ${y} H ${x1}`;
       };
+      // Versão v5: card do Igor → trilhas azuis com pontos → cada habilidade; linha tracejada até "IA como apoio"
+      const card = $('.circuit__card', circuit);
+      if (card) {
+        const K = rel(card.getBoundingClientRect());
+        const x0 = K.r;          // as trilhas saem da lateral do card, na altura do centro da foto
+        const y0 = P.cy;
+        // a linha vertical das trilhas fica sempre à direita da pílula "IA como apoio", sem encostar nela
+        const aidBox = $('.circuit__aid', circuit);
+        const aidR = aidBox ? rel(aidBox.getBoundingClientRect()).r : 0;
+        const bus = Math.min(xEnd - 28, Math.max(x0 + (xEnd - x0) * 0.36, aidR + 18));
+        skills.forEach((sk, k) => {
+          const y = rel(sk.getBoundingClientRect()).cy;
+          const d = route(x0, y0, bus, y);
+          add('path', { d, class: 'circuit__trace', pathLength: 100 }, { '--d': k });
+          add('path', { d, class: 'circuit__flow', pathLength: 100 }, { '--d': k });
+          // pontinhos fixos no trecho final de cada trilha, como na referência
+          add('circle', { cx: bus + (xEnd - bus) * 0.45, cy: y, r: 2.2, class: 'circuit__dot' });
+          add('circle', { cx: xEnd, cy: y, r: 3.4, class: 'circuit__pin circuit__pin--skill' });
+        });
+        add('circle', { cx: x0 + (bus - x0) * 0.5, cy: y0, r: 2.2, class: 'circuit__dot' });
+        add('circle', { cx: x0, cy: y0, r: 4, class: 'circuit__pin circuit__pin--hub' });
+        // linha tracejada: desce do card e entra na pílula "IA como apoio"
+        const aid = $('.circuit__aid', circuit);
+        if (aid) {
+          const Q = rel(aid.getBoundingClientRect());
+          const xd = Math.min(K.l + 46, Q.l - 14);
+          const rr = 8;
+          const dc = `M ${xd} ${K.b} V ${Q.cy - rr} Q ${xd} ${Q.cy} ${xd + rr} ${Q.cy} H ${Q.l}`;
+          add('path', { d: dc, class: 'circuit__cmd', pathLength: 100 });
+          add('circle', { cx: Q.l, cy: Q.cy, r: 2.6, class: 'circuit__dot' });
+        }
+        return;
+      }
       skills.forEach((sk, k) => {
         const fromAi = sk.dataset.src === 'ai' && A;
         const x0 = fromAi ? A.r : P.r;
@@ -228,6 +253,7 @@
     draw();
     if ('ResizeObserver' in window) new ResizeObserver(draw).observe(circuit);
     window.addEventListener('load', draw);
+    window.addEventListener('langchange', draw); // texto traduzido muda de tamanho: redesenha as trilhas
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(draw);
     // redesenha quando as habilidades terminam de entrar (elas chegam deslizando)
     const circuitSlide = circuit.closest('.slide');
@@ -255,8 +281,8 @@
     const update = () => {
       const i = idx();
       count.textContent = `${i + 1}/${n}`;
-      prev.disabled = i <= 0;
-      next.disabled = i >= n - 1;
+      if (prev) prev.disabled = i <= 0;
+      if (next) next.disabled = i >= n - 1;
       dots.forEach((d, k) => d.classList.toggle('on', k === i));
       if (hintCount) hintCount.textContent = `${i + 1} de ${n}`;
       if (i > 0) stage.classList.add('was-swiped');
@@ -271,8 +297,8 @@
       const target = (idx() + d + n) % n; // no último slide, volta ao primeiro
       track.scrollTo({ left: target * track.clientWidth, behavior: 'smooth' });
     };
-    prev.addEventListener('click', () => go(-1));
-    next.addEventListener('click', () => go(1));
+    if (prev) prev.addEventListener('click', () => go(-1));
+    if (next) next.addEventListener('click', () => go(1));
     if (hint) hint.addEventListener('click', () => go(1));
     track.addEventListener('scroll', () => requestAnimationFrame(update), { passive: true });
     update();
@@ -295,6 +321,72 @@
       }, { threshold: 0.6 });
       nudge.observe(car);
     }
+  });
+
+  /* ---------- Slides "Topo de funil" e "Fundo de funil": colchete vermelho e ligações verdes ---------- */
+  $$('.fn-grid').forEach((fnGrid) => {
+    const svg = $('.fn-links', fnGrid);
+    const NS = 'http://www.w3.org/2000/svg';
+    const add = (tag, attrs) => {
+      const el = document.createElementNS(NS, tag);
+      Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
+      svg.appendChild(el);
+      return el;
+    };
+    const drawFn = () => {
+      const box = fnGrid.getBoundingClientRect();
+      if (!box.width || getComputedStyle(svg).display === 'none') return;
+      svg.setAttribute('viewBox', `0 0 ${box.width} ${box.height}`);
+      svg.innerHTML = '';
+      const rel = (el) => { const r = el.getBoundingClientRect(); return { l: r.left - box.left, r: r.right - box.left, t: r.top - box.top, b: r.bottom - box.top, cx: r.left - box.left + r.width / 2, cy: r.top - box.top + r.height / 2 }; };
+      // colchete "}" ligando Reels/Carrosséis à grade do 1º perfil
+      const list = $('[data-fn-bracket]', fnGrid);
+      const phone1 = $('[data-fn-phone="1"]', fnGrid);
+      if (list && phone1) {
+        const L = rel(list);
+        const P = rel(phone1);
+        const x = L.r + Math.min(34, (P.l - L.r) * 0.45);
+        const t = L.t + 6, b = L.b - 6, m = (t + b) / 2, r = 10;
+        add('path', { class: 'fn-bracket', pathLength: 100,
+          d: `M ${x - r} ${t} Q ${x} ${t} ${x} ${t + r} V ${m - r} Q ${x} ${m} ${x + r} ${m} Q ${x} ${m} ${x} ${m + r} V ${b - r} Q ${x} ${b} ${x - r} ${b}` });
+      }
+      // linhas verdes: Link na bio → link da bio; Destaque → círculo "Newsletter"; Post fixado → 1º post do feed.
+      // A lista segue a ordem do perfil (de cima para baixo), e cada linha tem seu "trilho" vertical
+      // um pouco mais perto do celular que a anterior — assim as três nunca se cruzam.
+      const phone2 = $('[data-fn-phone="2"]', fnGrid);
+      if (phone2) {
+        const P2 = rel(phone2);
+        [
+          ['bio', 0.62, (T) => ({ x: T.r + 7, y: T.cy })],
+          ['hl', 0.42, (T) => ({ x: T.cx, y: T.b + 5 })],
+          ['pin', 0.22, (T) => ({ x: T.r + 6, y: T.cy })],
+        ].forEach(([key, frac, at]) => {
+          const from = $(`[data-fn-from="${key}"] .fn-ico`, fnGrid);
+          const target = $(`[data-fn-target="${key}"]`, fnGrid);
+          if (!from || !target) return;
+          const F = rel(from);
+          const T = at(rel(target));
+          const x0 = F.l - 10;
+          const bus = P2.r + (x0 - P2.r) * frac;
+          const r = 8;
+          const s = Math.sign(T.y - F.cy) || 1;
+          // quase na mesma altura: linha reta (sem degrau)
+          const straight = Math.abs(T.y - F.cy) < r * 2 + 2;
+          const y0 = straight ? T.y : F.cy;
+          const d = straight
+            ? `M ${x0} ${y0} H ${T.x}`
+            : `M ${x0} ${y0} H ${bus + r} Q ${bus} ${y0} ${bus} ${y0 + s * r} V ${T.y - s * r} Q ${bus} ${T.y} ${bus - r} ${T.y} H ${T.x}`;
+          add('path', { class: 'fn-wire', pathLength: 100, d });
+          add('circle', { class: 'fn-wire-dot', cx: T.x, cy: T.y, r: 3.6 });
+          add('circle', { class: 'fn-wire-dot', cx: x0, cy: y0, r: 2.6 });
+        });
+      }
+    };
+    drawFn();
+    if ('ResizeObserver' in window) new ResizeObserver(drawFn).observe(fnGrid);
+    window.addEventListener('load', drawFn);
+    window.addEventListener('langchange', drawFn); // idem para o colchete e as linhas verdes
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(drawFn);
   });
 
   /* ---------- Grade do perfil (slide 11) ---------- */
@@ -334,21 +426,226 @@
   /* ---------- Menu lateral (índice da apresentação) ---------- */
   const NAV = {
     capa: 'Início', papel: 'Papel do Instagram', interesse: 'Interesse do público', trabalho: 'Meu trabalho',
-    linhas: 'Linhas editoriais', algoritmo: 'Por que prende a atenção', ripple: 'The Ripple Effect', brief: 'Market Brief',
-    newswire: 'Newswire', inside: 'Inside Story', frequencia: 'Frequência', referencias: 'Referências', entrega: 'O que eu entrego', perfil: 'Funil e perfil',
+    linhas: 'Linhas editoriais', algoritmo: 'Frequência', ripple: 'The Ripple Effect', brief: 'Market Brief',
+    newswire: 'Newswire', inside: 'Inside Story', frequencia: 'Frequência', referencias: 'Referências', entrega: 'O que eu entrego', perfil: 'Topo de funil', 'perfil-fundo': 'Fundo de funil',
     convite: 'Convite à newsletter', ampliar: 'Aprender e ampliar', metricas: 'Métricas', fim: 'Encerramento',
   };
   const SUBNAV = new Set(['ripple', 'brief', 'newswire', 'inside']);
+
+  /* ---------- Slider horizontal: as 4 linhas editoriais numa seção só ----------
+     Computador: a seção fica presa na tela e a rolagem para baixo passa as linhas para o lado.
+     Celular / tablet: as linhas passam deslizando com o dedo (com um "empurrãozinho" de dica). */
+  const hs = $('.slide--hs');
+  const hsTrack = hs ? $('.hs__track', hs) : null;
+  const hsPanels = hs ? $$('.hs__panel', hs) : [];
+  const hsTabs = hs ? $$('[data-hs-go]', hs) : [];
+  const hsSteps = hs ? $$('[data-hs-step]', hs) : [];
+  const hsNow = hs ? $('[data-hs-now]', hs) : null;
+  const hsK = hs ? slides.indexOf(hs) : -1;
+  const hsN = hsPanels.length;
+  const hsMQ = window.matchMedia('(min-width: 1025px) and (min-height: 600px)');
+  const hsPinned = () => !!hs && hs.classList.contains('is-pinned');
+  let hsI = 0;
+  let hsLockUntil = 0; // durante uma rolagem programada, não deixa o contador "voltar" no meio do caminho
+
+  // Itens do índice lateral: cada painel do slider aparece como uma linha própria
+  const navItems = [];
+  slides.forEach((s, k) => {
+    if (s === hs) hsPanels.forEach((p, j) => navItems.push({ id: p.id, k, p: j }));
+    else navItems.push({ id: s.id, k });
+  });
   const sidenav = document.createElement('nav');
   sidenav.className = 'sidenav';
   sidenav.setAttribute('aria-label', 'Índice da apresentação');
-  sidenav.innerHTML = '<ol>' + slides.map((s, k) =>
-    `<li><a href="#${s.id}" data-k="${k}" class="${SUBNAV.has(s.id) ? 'is-sub' : ''}"><i aria-hidden="true"></i><span>${esc(NAV[s.id] || s.dataset.label || `Slide ${k + 1}`)}</span></a></li>`
+  sidenav.innerHTML = '<ol>' + navItems.map((it) =>
+    `<li><a href="#${it.id}" data-k="${it.k}"${it.p != null ? ` data-p="${it.p}"` : ''} class="${SUBNAV.has(it.id) ? 'is-sub' : ''}"><i aria-hidden="true"></i><span>${esc(NAV[it.id] || slides[it.k].dataset.label || `Slide ${it.k + 1}`)}</span></a></li>`
   ).join('') + '</ol>';
   document.body.appendChild(sidenav);
   const navLinks = $$('a', sidenav);
+  const refreshNav = () => navLinks.forEach((a) => {
+    const on = Number(a.dataset.k) === current && (a.dataset.p == null || Number(a.dataset.p) === hsI);
+    a.classList.toggle('is-on', on);
+    if (on) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current');
+  });
+
+  const hsMark = (i) => {
+    hsI = i;
+    hsPanels.forEach((p, j) => { const on = j === i; p.classList.toggle('is-on', on); p.inert = !on; p.setAttribute('aria-hidden', String(!on)); });
+    hsTabs.forEach((t, j) => { const on = j === i; t.classList.toggle('is-on', on); t.setAttribute('aria-selected', String(on)); t.tabIndex = on ? 0 : -1; });
+    // no celular as abas não cabem todas: rola a fileira para mostrar a aba ativa
+    const tabsRow = hsTabs[i] && hsTabs[i].parentElement;
+    if (tabsRow && tabsRow.scrollWidth > tabsRow.clientWidth) tabsRow.scrollTo({ left: hsTabs[i].offsetLeft - tabsRow.offsetLeft - 8, behavior: 'smooth' });
+    hsSteps.forEach((b) => { b.disabled = Number(b.dataset.hsStep) < 0 ? i <= 0 : i >= hsN - 1; });
+    if (hsNow) hsNow.textContent = i + 1;
+    hs.dataset.label = hsPanels[i].dataset.label || hs.dataset.label;
+    if (current === hsK) labelEl.textContent = hs.dataset.label;
+    refreshNav();
+  };
+  const hsTopAbs = () => hs.getBoundingClientRect().top + window.scrollY;
+  const hsGo = (i, behavior = 'smooth') => {
+    if (!hs) return;
+    const t = Math.max(0, Math.min(hsN - 1, i));
+    if (behavior === 'smooth') hsLockUntil = performance.now() + 750;
+    if (hsPinned()) window.scrollTo({ top: hsTopAbs() + t * window.innerHeight, behavior });
+    else hsTrack.scrollTo({ left: t * hsTrack.clientWidth, behavior });
+    hsMark(t);
+  };
+  // Leva a página até o slider e abre o painel pedido (links #inside, #brief, #newswire, #ripple)
+  const hsOpen = (id, behavior = 'smooth') => {
+    const j = hsPanels.findIndex((p) => p.id === id);
+    if (j < 0) return false;
+    if (hsPinned()) { hsGo(j, behavior); return true; }
+    hsGo(j, 'instant');
+    hs.scrollIntoView({ behavior, block: 'start' });
+    return true;
+  };
+  // Modo preso: a posição da rolagem vertical vira deslocamento horizontal
+  const updateHs = () => {
+    if (!hsPinned()) return;
+    const r = hs.getBoundingClientRect();
+    const range = Math.max(1, r.height - window.innerHeight);
+    const p = Math.max(0, Math.min(1, -r.top / range));
+    const pos = p * (hsN - 1); // 0 = primeira linha, hsN - 1 = última
+    hsTrack.style.transform = `translate3d(${(-pos * hsTrack.clientWidth).toFixed(1)}px, 0, 0)`;
+    hsPanels.forEach((pn, j) => { pn.firstElementChild.style.opacity = (1 - Math.min(1, Math.abs(pos - j)) * 0.75).toFixed(3); });
+    hs.style.setProperty('--hs-p', ((pos + 1) / hsN).toFixed(4));
+    if (pos > 0.04) hs.classList.add('is-moved');
+    const i = Math.round(pos);
+    if (i !== hsI && performance.now() > hsLockUntil) hsMark(i);
+  };
+  const hsMode = () => {
+    if (!hs) return;
+    const pin = hsMQ.matches;
+    hs.classList.toggle('is-pinned', pin);
+    if (pin) {
+      hsTrack.scrollLeft = 0;
+      updateHs();
+    } else {
+      hsTrack.style.transform = '';
+      hsPanels.forEach((pn) => { pn.firstElementChild.style.opacity = ''; });
+      hsTrack.scrollTo({ left: hsI * hsTrack.clientWidth, behavior: 'instant' });
+      hs.style.setProperty('--hs-p', ((hsI + 1) / hsN).toFixed(4));
+    }
+  };
+
+  if (hs) {
+    hs.style.setProperty('--hs-n', hsN);
+    // pontos de parada da rolagem vertical: um por linha
+    hs.insertAdjacentHTML('beforeend', hsPanels.map((_, k) => `<span class="hs__snap" style="--k:${k}" aria-hidden="true"></span>`).join(''));
+    hsTabs.forEach((t) => t.addEventListener('click', () => hsGo(Number(t.dataset.hsGo))));
+    hsSteps.forEach((b) => b.addEventListener('click', () => hsGo(hsI + Number(b.dataset.hsStep))));
+    // setas do teclado dentro das abas
+    $('.hs__tabs', hs).addEventListener('keydown', (e) => {
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      e.preventDefault(); e.stopPropagation();
+      hsGo(hsI + (e.key === 'ArrowRight' ? 1 : -1));
+      hsTabs[hsI].focus();
+    });
+    // celular / tablet: deslizar com o dedo atualiza abas, contador e progresso
+    let hsTick = false;
+    hsTrack.addEventListener('scroll', () => {
+      if (hsPinned() || hsTick) return;
+      hsTick = true;
+      requestAnimationFrame(() => {
+        hsTick = false;
+        const pos = hsTrack.scrollLeft / hsTrack.clientWidth;
+        hs.style.setProperty('--hs-p', ((pos + 1) / hsN).toFixed(4));
+        if (pos > 0.3) hs.classList.add('is-moved');
+        const i = Math.round(pos);
+        if (i !== hsI && performance.now() > hsLockUntil) hsMark(i);
+      });
+    }, { passive: true });
+    // celular / tablet: quando o slider aparece, ele "espia" a próxima linha para mostrar que dá para deslizar
+    if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      const peek = new IntersectionObserver((entries) => {
+        entries.forEach((en) => {
+          if (!en.isIntersecting || hsPinned() || hsI !== 0) return;
+          peek.disconnect();
+          setTimeout(() => {
+            if (hsPinned() || hsI !== 0) return;
+            hsTrack.style.scrollSnapType = 'none';
+            hsTrack.scrollTo({ left: hsTrack.clientWidth * 0.18, behavior: 'smooth' });
+            setTimeout(() => {
+              hsTrack.scrollTo({ left: 0, behavior: 'smooth' });
+              setTimeout(() => { hsTrack.style.scrollSnapType = ''; hs.classList.remove('is-moved'); }, 500);
+            }, 700);
+          }, 700);
+        });
+      }, { threshold: 0.35 });
+      peek.observe(hsTrack);
+    }
+    // Computador: cada "rolada" do mouse ou do trackpad passa exatamente uma linha (sem parar no meio)
+    const hsPos = () => {
+      const r = hs.getBoundingClientRect();
+      return Math.max(0, Math.min(hsN - 1, (-r.top / Math.max(1, r.height - window.innerHeight)) * (hsN - 1)));
+    };
+    let wheelLast = 0;
+    let wheelLastAbs = 0;
+    let wheelSettle = 0;
+    let hsExitUntil = 0;
+    // se a rolagem parar entre duas linhas (ex.: chegando de cima com embalo), assenta na mais próxima
+    const hsSettle = () => {
+      if (!hsPinned() || performance.now() < hsLockUntil) return;
+      const r = hs.getBoundingClientRect();
+      if (r.top > 2 || r.bottom < window.innerHeight - 2) return;
+      const p = hsPos();
+      if (Math.abs(p - Math.round(p)) > 0.01) hsGo(Math.round(p));
+    };
+    window.addEventListener('wheel', (e) => {
+      if (!hsPinned() || e.ctrlKey) return;
+      if (document.documentElement.style.overflow === 'hidden') return; // popup ampliado aberto
+      const now = performance.now();
+      const abs = Math.abs(e.deltaY);
+      // gesto novo = pausa desde o último evento, ou um impulso mais forte que o embalo do trackpad
+      // (conta todos os eventos, inclusive os de antes de chegar ao slider, para o embalo não "pular" uma linha)
+      const fresh = now - wheelLast > 220 || abs > wheelLastAbs * 1.6 + 4;
+      wheelLast = now;
+      wheelLastAbs = abs;
+      if (now < hsExitUntil) { e.preventDefault(); return; }              // acabou de sair do slider: segura o embalo
+      if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;             // gesto lateral: fica com o carrossel
+      const r = hs.getBoundingClientRect();
+      const vh = window.innerHeight;
+      // chegando perto do slider: descendo, entra direto na 1ª linha; subindo, entra direto na última
+      // (o embalo da rolagem não consegue passar da linha certa)
+      const nearFromAbove = e.deltaY > 0 && r.top > 2 && r.top <= vh + 2;
+      const nearFromBelow = e.deltaY < 0 && r.bottom < vh - 2 && r.bottom >= -2;
+      if (nearFromAbove || nearFromBelow) {
+        e.preventDefault();
+        if (now >= hsLockUntil) hsGo(nearFromAbove ? 0 : hsN - 1);
+        return;
+      }
+      if (r.top > 2 || r.bottom < vh - 2) return;                      // longe do slider: rolagem normal
+      clearTimeout(wheelSettle);
+      wheelSettle = setTimeout(hsSettle, 180);
+      const pos = hsPos();
+      const target = e.deltaY > 0 ? Math.floor(pos + 0.05) + 1 : Math.ceil(pos - 0.05) - 1;
+      const busy = now < hsLockUntil || !fresh;
+      if (target < 0 || target > hsN - 1) {
+        // nas pontas, um gesto novo leva direto ao slide vizinho; o embalo do gesto anterior é segurado
+        e.preventDefault();
+        if (!busy) { hsLockUntil = hsExitUntil = now + 800; goTo(current + (target < 0 ? -1 : 1)); }
+        return;
+      }
+      e.preventDefault();
+      if (!busy) hsGo(target);
+    }, { passive: false });
+
+    window.addEventListener('resize', hsMode);
+    if (hsMQ.addEventListener) hsMQ.addEventListener('change', hsMode);
+    // links da página que apontam para uma linha do slider
+    document.addEventListener('click', (e) => {
+      const a = e.target.closest && e.target.closest('a[href^="#"]');
+      if (a && !a.closest('.sidenav') && hsOpen(a.getAttribute('href').slice(1))) e.preventDefault();
+    });
+    hsMark(0);
+    hsMode();
+    // abriu a página já com #inside, #brief, #newswire ou #ripple no endereço
+    if (location.hash) requestAnimationFrame(() => hsOpen(location.hash.slice(1), 'instant'));
+  }
+
   navLinks.forEach((a) => a.addEventListener('click', (e) => {
     e.preventDefault();
+    if (a.dataset.p != null) { hsOpen(hsPanels[Number(a.dataset.p)].id); return; }
     slides[Number(a.dataset.k)].scrollIntoView({ behavior: 'smooth', block: 'start' });
   }));
 
@@ -357,7 +654,9 @@
     current = i;
     nowEl.textContent = pad(i + 1);
     labelEl.textContent = slides[i].dataset.label || '';
-    navLinks.forEach((a, k) => { a.classList.toggle('is-on', k === i); if (k === i) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current'); });
+    refreshNav();
+    // setas ↑↓ do canto somem enquanto o slider das linhas está na tela
+    document.documentElement.classList.toggle('hs-active', i === hsK);
     bar.style.width = `${((i + 1) / total) * 100}%`;
     prevBtn.disabled = i === 0;
     nextBtn.disabled = i === total - 1;
@@ -412,6 +711,7 @@
     setCurrent(i);
     updateTheme();
     updateProcess();
+    updateHs();
   };
   let ticking = false;
   window.addEventListener('scroll', () => {
@@ -423,6 +723,8 @@
 
   const goTo = (i) => {
     const t = Math.max(0, Math.min(total - 1, i));
+    // voltando de baixo para o slider preso, entra pela última linha (e não pela primeira)
+    if (t === hsK && hsPinned()) { hsGo(t < current ? hsN - 1 : 0); return; }
     slides[t].scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
   prevBtn.addEventListener('click', () => goTo(current - 1));
@@ -487,7 +789,12 @@
     lbPrev.hidden = lbNext.hidden = true;
     lbCount.textContent = '';
     lbVideo.hidden = false;
-    lbVideo.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(youtubeId)}?autoplay=1&rel=0&modestbranding=1&playsinline=1" title="Vídeo ampliado" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+    const ytId = encodeURIComponent(youtubeId);
+    // O YouTube exige saber de qual site o player está sendo incorporado (senão mostra o "Erro 153"):
+    // referrerpolicy envia essa informação. Aberta direto do arquivo (file://) a página não tem site,
+    // então o player só funciona com o site servido por http(s) — por isso há o link de reserva abaixo.
+    lbVideo.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${ytId}?autoplay=1&rel=0&playsinline=1" title="Vídeo ampliado" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`
+      + `<a class="lightbox__yt" href="https://www.youtube.com/watch?v=${ytId}" target="_blank" rel="noopener">Abrir no YouTube ↗</a>`;
     lb.hidden = false;
     document.documentElement.style.overflow = 'hidden';
     requestAnimationFrame(() => lb.classList.add('is-open'));
@@ -539,6 +846,14 @@
     const inCarousel = t.closest && t.closest('.carousel__track');
     const k = e.key;
     if ((k === 'ArrowLeft' || k === 'ArrowRight') && inCarousel) return;
+    // no slider das linhas, as setas passam de linha; nas pontas, seguem para o slide anterior/seguinte
+    // (no computador, ↓ ↑ e espaço também passam de linha, já que a rolagem é que move o slider)
+    if (hs && current === hsK) {
+      const fwd = k === 'ArrowRight' || (hsPinned() && (k === 'ArrowDown' || k === 'PageDown' || (k === ' ' && !e.shiftKey)));
+      const back = k === 'ArrowLeft' || (hsPinned() && (k === 'ArrowUp' || k === 'PageUp' || (k === ' ' && e.shiftKey)));
+      const nx = hsI + (fwd ? 1 : back ? -1 : 0);
+      if ((fwd || back) && nx >= 0 && nx < hsN) { e.preventDefault(); hsGo(nx); return; }
+    }
     if (k === 'ArrowDown' || k === 'PageDown' || k === 'ArrowRight' || (k === ' ' && !e.shiftKey)) { e.preventDefault(); goTo(current + 1); }
     else if (k === 'ArrowUp' || k === 'PageUp' || k === 'ArrowLeft' || (k === ' ' && e.shiftKey)) { e.preventDefault(); goTo(current - 1); }
     else if (k === 'Home') { e.preventDefault(); goTo(0); }
@@ -561,7 +876,7 @@
       entries.forEach((en) => {
         if (en.isIntersecting) {
           en.target.classList.add('is-in');
-          if (!reduce) typeIn(en.target);
+          // (o efeito "escrevendo…" na assinatura foi desligado a pedido; a função typeIn ficou guardada acima)
           io.unobserve(en.target);
         }
       });
@@ -570,4 +885,135 @@
   } else {
     slides.forEach((s) => s.classList.add('is-in'));
   }
+  /* ---------- Wave Mesh: fundo do encerramento ----------
+     Adaptação em JavaScript puro do componente "Wave Mesh" (React): um campo de pontos
+     até o horizonte, rolando como um mar lento. O mouse levanta um morro onde aponta;
+     o clique solta um anel que viaja pelo campo e some. Os pontos encolhem e esmaecem
+     com a distância. Pausa sozinho quando o slide sai da tela. */
+  const waveMesh = (host, { colors = ['#06070a', '#c9d6ea', '#f0b37a'], crests = false } = {}) => {
+    const canvas = document.createElement('canvas');
+    canvas.className = 'wave-mesh';
+    canvas.setAttribute('aria-hidden', 'true');
+    host.prepend(canvas);
+    const ctx = canvas.getContext('2d');
+    if (!ctx) { canvas.remove(); return; }
+
+    const CAM = 0.62; // altura da câmera sobre o chão
+    const NEAR = 0.35, FAR = 3.4;
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const coarse = !matchMedia('(hover: hover) and (pointer: fine)').matches;
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    const hex = (h) => { const n = parseInt(h.slice(1), 16); return `${(n >> 16) & 255},${(n >> 8) & 255},${n & 255}`; };
+    const dot = hex(colors[1]), accent = hex(colors[2]);
+    let W = 0, H = 0, cols = 0, rows = 0, f = 0, hz = 0;
+    let raf = 0, visible = true, last = 0;
+    const t0 = performance.now();
+    const ptr = { x: 0, z: 1.4, s: 0, tx: 0, tz: 1.4, ts: 0 };
+    const rings = [];
+
+    // fundo: um leve brilho da cor dos pontos sobre o tom de base
+    host.style.background = `radial-gradient(120% 60% at 50% 30%, rgba(${dot},0.07), transparent 60%), ${colors[0]}`;
+
+    const resize = () => {
+      const w = host.clientWidth, h = host.clientHeight;
+      if (w === W && h === H) return;
+      W = w; H = h;
+      canvas.width = Math.round(W * dpr);
+      canvas.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      f = Math.max(W, H * 1.2) * 0.55; // distância focal
+      hz = H * 0.3; // horizonte
+      cols = Math.round(Math.min(150, Math.max(56, W / 9)));
+      rows = Math.round(Math.min(90, Math.max(48, H / 9.5)));
+    };
+    // o chão cobre esta meia-largura no fundo, para o campo sempre preencher o quadro
+    const half = () => (W / 2 / f) * FAR * 1.05;
+
+    const height = (x, z, t) => {
+      let y = 0.085 * Math.sin(x * 2.2 + t * 0.7)
+        + 0.07 * Math.sin(z * 2.9 - t * 0.9 + x * 0.8)
+        + 0.03 * Math.sin((x + z) * 6.1 + t * 1.6);
+      if (ptr.s > 0.01) {
+        const d2 = (x - ptr.x) ** 2 + (z - ptr.z) ** 2;
+        y += 0.24 * ptr.s * Math.exp(-d2 / 0.07);
+      }
+      for (const r of rings) {
+        const age = t - r.t, d = Math.hypot(x - r.x, z - r.z), front = age * 1.15;
+        y += 0.2 * Math.exp(-((d - front) ** 2) / 0.014) * Math.exp(-age * 0.75);
+      }
+      return y;
+    };
+
+    const frame = (t) => {
+      ctx.clearRect(0, 0, W, H);
+      ptr.x += (ptr.tx - ptr.x) * 0.1;
+      ptr.z += (ptr.tz - ptr.z) * 0.1;
+      ptr.s += (ptr.ts - ptr.s) * 0.06;
+      while (rings.length && t - rings[0].t > 5) rings.shift();
+      const hw = half();
+      const hot = [];
+      for (let j = 0; j < rows; j++) {
+        // fileiras espaçadas em profundidade de forma geométrica: ficam quase uniformes na tela
+        const z = FAR * Math.pow(NEAR / FAR, j / (rows - 1));
+        const fog = Math.pow(1 - (z - NEAR) / (FAR - NEAR), 1.25);
+        const size = Math.max(0.8, Math.min(3.2, 2.3 / z));
+        ctx.fillStyle = `rgba(${dot},${(0.12 + fog * 0.85).toFixed(3)})`;
+        for (let i = 0; i < cols; i++) {
+          const x = -hw + (i / (cols - 1)) * hw * 2;
+          const y = height(x, z, t);
+          const sx = W / 2 + (x / z) * f;
+          if (sx < -4 || sx > W + 4) continue;
+          const sy = hz + ((CAM - y) / z) * f;
+          if (crests && y > 0.12) { hot.push(sx, sy, size, fog); continue; }
+          ctx.fillRect(sx - size / 2, sy - size / 2, size, size);
+        }
+      }
+      for (let k = 0; k < hot.length; k += 4) {
+        ctx.fillStyle = `rgba(${accent},${(0.2 + hot[k + 3] * 0.8).toFixed(3)})`;
+        const s = hot[k + 2] * 1.15;
+        ctx.fillRect(hot[k] - s / 2, hot[k + 1] - s / 2, s, s);
+      }
+    };
+
+    const now = () => (performance.now() - t0) / 1000;
+    const loop = (ms) => {
+      if (!visible || document.hidden) { raf = 0; return; }
+      raf = requestAnimationFrame(loop);
+      if (coarse && ms - last < 30) return; // celular: ~30 fps para poupar bateria
+      last = ms;
+      resize();
+      frame(now());
+    };
+    const wake = () => { if (!reduced && !raf && visible && !document.hidden) raf = requestAnimationFrame(loop); };
+
+    // onde no chão cai um ponto da tela (ignorando as ondas)
+    const ground = (e) => {
+      const r = host.getBoundingClientRect();
+      const sx = e.clientX - r.left, sy = e.clientY - r.top;
+      if (sx < 0 || sy < 0 || sx > r.width || sy > r.height || sy <= hz + 4) return null;
+      const z = Math.min(FAR, Math.max(NEAR, (CAM * f) / (sy - hz)));
+      return { x: ((sx - W / 2) * z) / f, z };
+    };
+    const onMove = (e) => {
+      const g = ground(e);
+      if (g) {
+        ptr.tx = g.x; ptr.tz = g.z;
+        if (ptr.s < 0.05) { ptr.x = g.x; ptr.z = g.z; }
+      }
+      ptr.ts = g ? 1 : 0;
+    };
+    const onDown = (e) => { const g = ground(e); if (g) rings.push({ x: g.x, z: g.z, t: now() }); };
+
+    resize();
+    frame(reduced ? 3 : 0);
+    new IntersectionObserver(([e]) => { visible = e.isIntersecting; wake(); }).observe(host);
+    new ResizeObserver(() => { if (reduced) { resize(); frame(3); } }).observe(host);
+    document.addEventListener('visibilitychange', wake);
+    if (!reduced) {
+      wake();
+      if (!coarse) window.addEventListener('pointermove', onMove, { passive: true });
+      window.addEventListener('pointerdown', onDown, { passive: true });
+    }
+  };
+  $$('[data-wave-mesh]').forEach((el) => waveMesh(el));
 })();

@@ -24,7 +24,14 @@
       <span class="brand__text"><span class="brand__name">Igor Souza <span class="vbadge vbadge--sm" data-badge></span></span><span class="brand__role">Content Creator / Social Media</span></span>
     </a>
     <span class="topbar__label" id="topbar-label">Estratégia de crescimento</span>
-    <span class="topbar__count mono"><span id="count-now">01</span> / <span id="count-total">15</span></span>
+    <div class="topbar__right">
+      <!-- Idioma: inglês é o padrão; a escolha fica salva no navegador -->
+      <div class="lang-switch" role="group" aria-label="Idioma">
+        <button type="button" class="lang-switch__btn is-on" data-lang="en" aria-pressed="true" aria-label="English">EN</button>
+        <button type="button" class="lang-switch__btn" data-lang="pt" aria-pressed="false" aria-label="Português">PT</button>
+      </div>
+      <span class="topbar__count mono"><span id="count-now">01</span> / <span id="count-total">15</span></span>
+    </div>
     <span class="progress" aria-hidden="true"><span id="progress-bar"></span></span>
   </header>
 
@@ -40,120 +47,52 @@
         <p class="lead lead--xl">Conteúdo editorial para ampliar a presença da StoxRadar e atrair inscritos para a newsletter.</p>
         <div class="cover__foot">
           <div data-byline data-size="lg" data-meta="Content Creator / Social Media"></div>
-          <a class="btn" href="#papel">Ver a estratégia <span aria-hidden="true">↓</span></a>
-        </div>
-      </div>
-    </section>
-
-    <!-- 02 · PAPEL DO INSTAGRAM + INTERESSE DO PÚBLICO -->
-    <section class="slide" id="papel" data-label="Estratégia de crescimento">
-      <div class="wrap">
-        <div class="role-grid role-grid--single">
-          <div class="role-copy">
-            <div data-byline></div>
-            <h2 class="display">O papel do Instagram na estratégia</h2>
-            <p class="lead">A proposta é construir um caminho entre descoberta e inscrição. <strong>Cada etapa precisa ser acompanhada.</strong></p>
-            <div class="interest">
-              <h3>O conteúdo começa pelo interesse do público</h3>
-              <ol class="interest__list">
-                <li><span>01</span>Uma pauta que desperta curiosidade.</li>
-                <li><span>02</span>Uma capa que faz a pessoa parar.</li>
-                <li><span>03</span>Uma história que vale acompanhar.</li>
-              </ol>
-              <p>As quatro linhas editoriais combinam pesquisa, uma escolha clara de ângulo e uma narrativa que entrega o interesse criado na abertura.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 03 · MEU TRABALHO -->
-    <section class="slide" id="trabalho" data-label="Estratégia de crescimento">
-      <div class="wrap">
-        <div class="work-grid">
-          <div class="work-copy">
-            <div data-byline data-size="lg" data-meta="Por que estou aqui"></div>
-            <h2 class="display">Meu trabalho é <br />conquistar atenção</h2>
-            <p class="lead lead--xl">Criar narrativas sobre empresas, mercado e economia que façam as pessoas <em>parar</em>, querer <em>entender</em> e continuar <em>acompanhando</em>.</p>
-            <p class="disclaimer disclaimer--warn" role="note">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.3 3.9 2.6 17.5A2 2 0 0 0 4.3 20.5h15.4a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4.5M12 16.8v.2"/></svg>
-              O conteúdo tem caráter editorial e informativo. Não faço recomendações de compra ou venda de ações.
-            </p>
-          </div>
-          <ol class="process" aria-label="Como a atenção é construída">
-            <li class="process__step" style="--lvl:1">
-              <span class="process__node"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg></span>
-              <div class="process__body">
-                <span class="mono">01 · Pesquisa</span>
-                <h3>Dá base à história</h3>
-                <span class="process__out"><i></i><i></i><i></i><b>Base</b></span>
-              </div>
-            </li>
-            <li class="process__step" style="--lvl:2">
-              <span class="process__node"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2.5"/><path d="M8 8h8M8 12h5"/><path d="m4 17 4.5-4 3.5 3 2.5-2 5.5 4.5"/></svg></span>
-              <div class="process__body">
-                <span class="mono">02 · Capa</span>
-                <h3>Desperta curiosidade</h3>
-                <span class="process__out"><i></i><i></i><i></i><b>Curiosidade</b></span>
-              </div>
-            </li>
-            <li class="process__step" style="--lvl:3">
-              <span class="process__node"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 12h7M9 16h5"/></svg></span>
-              <div class="process__body">
-                <span class="mono">03 · Roteiro</span>
-                <h3>Sustenta o interesse</h3>
-                <p>e cria oportunidades de engajamento com a StoxRadar.</p>
-                <span class="process__out"><i></i><i></i><i></i><b>Interesse</b></span>
-              </div>
-            </li>
-            <li class="process__end"><span class="process__node process__node--end"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg></span><span><b>Atenção conquistada</b><br />envios, comentários e reposts</span></li>
-          </ol>
+          <a class="btn" href="#linhas">Ver a estratégia <span aria-hidden="true">↓</span></a>
         </div>
       </div>
     </section>
 
     <!-- 04 · INTRODUÇÃO ÀS LINHAS EDITORIAIS -->
-    <section class="slide slide--dark" id="linhas" data-label="Linhas editoriais">
+    <section class="slide slide--ed" id="linhas" data-label="Linhas editoriais">
       <div class="wrap">
-        <div class="intro-grid">
-          <div class="intro-copy">
-            <div data-byline></div>
-            <h2 class="display">Criei 4 linhas editoriais</h2>
-            <p class="lead">Cada uma tem nome e identidade visual próprios, criados a partir do branding da StoxRadar. São linhas estratégicas, voltadas a alcance: a pessoa quer ler a história até o final.</p>
-            <p class="footline">Em todas as linhas, os possíveis efeitos são <strong>envios, comentários e reposts que ajudam novas pessoas a descobrir a marca.</strong></p>
+        <!-- assinatura, título e texto alinhados na mesma coluna -->
+        <div class="ed-intro">
+          <div data-byline></div>
+          <span class="ed-eyebrow">Linhas editoriais</span>
+          <h2 class="ed-title">Criei 4 linhas editoriais.</h2>
+          <div class="ed-body">
+            <p>Cada uma tem nome, lógica e intenção próprias. Algumas nascem de fatos atuais. Outras resgatam movimentos históricos que ajudam a explicar o presente. Mas todas seguem o mesmo princípio: chamar atenção, sustentar a leitura e entregar algo útil para quem acompanha a StoxRadar.</p>
+            <p>Nada entra por acaso. Todo conteúdo passa por curadoria, do tema ao ângulo, da manchete ao formato, para garantir relevância, clareza e consistência editorial. Agora, vou observar qual linha performa melhor. Pode ser que uma seja mais utilizada do que a outra.</p>
           </div>
-        <div class="lines-intro">
-          <a class="line-card" href="#inside">
-            <figure class="line-card__cover"><img data-cover="insideStory" alt="Capa da linha Inside Story" loading="lazy" /></figure>
-            <span class="mono line-card__n"><b>01</b> · Reels</span>
-            <h3>Inside Story</h3>
-            <p><b>Inside story</b> é a história de bastidores, o que não aparece na manchete. A linha conta como o caso aconteceu, do começo ao desfecho.</p>
-          </a>
-          <a class="line-card" href="#brief">
-            <figure class="line-card__cover"><img data-cover="marketBrief" alt="Capa da linha Market Brief" loading="lazy" /></figure>
-            <span class="mono line-card__n"><b>02</b> · Carrossel</span>
-            <h3>Market Brief</h3>
-            <p><b>Brief</b> é o resumo curto e direto, como um briefing. A linha entrega o essencial de uma notícia de mercado em poucos slides.</p>
-          </a>
-          <a class="line-card" href="#newswire">
-            <figure class="line-card__cover"><img data-cover="newswire" alt="Capa da linha Newswire" loading="lazy" /></figure>
-            <span class="mono line-card__n"><b>03</b> · Post + legenda</span>
-            <h3>Newswire</h3>
-            <p><b>Newswire</b> é o fio das agências de notícias, por onde a informação chega primeiro. A linha traz o fato com manchete direta e o contexto na legenda.</p>
-          </a>
-          <a class="line-card" href="#ripple">
-            <figure class="line-card__cover"><img data-cover="rippleEffect" alt="Capa da linha The Ripple Effect" loading="lazy" /></figure>
-            <span class="mono line-card__n"><b>04</b> · Carrossel</span>
-            <h3>The Ripple Effect</h3>
-            <p><b>Ripple effect</b> é o efeito cascata: a pedra cai na água e as ondas chegam longe. A linha mostra como um acontecimento se espalha por empresas, política e economia.</p>
-          </a>
-        </div>
+          <p class="ed-close">Atual ou histórico, o critério é o mesmo: relevância, retenção e utilidade.</p>
         </div>
       </div>
     </section>
 
-    <!-- 05 · INSIDE STORY -->
-    <section class="slide slide--line slide--dark" id="inside" data-label="Linhas editoriais · Reels narrativo">
+    <!-- 05 · AS 4 LINHAS EM SLIDER HORIZONTAL (Inside Story, The Ripple Effect, Market Brief, Newswire)
+         No computador, a seção fica presa na tela e a rolagem para baixo passa as linhas para o lado.
+         No celular e no tablet, as linhas passam deslizando com o dedo. -->
+    <section class="slide slide--line slide--dark slide--hs" id="linhas-slider" data-label="Linhas editoriais · Reels narrativo" aria-roledescription="carrossel" aria-label="As 4 linhas editoriais">
+      <div class="hs__sticky">
+      <div class="wrap hs__bar">
+        <div class="hs__tabs" role="tablist" aria-label="Escolha a linha editorial">
+          <button type="button" class="hs__tab is-on" role="tab" aria-selected="true" aria-controls="inside" data-hs-go="0"><span class="hs__tab-n">01</span>Inside Story</button>
+          <button type="button" class="hs__tab" role="tab" aria-selected="false" aria-controls="ripple" data-hs-go="1" tabindex="-1"><span class="hs__tab-n">02</span>The Ripple Effect</button>
+          <button type="button" class="hs__tab" role="tab" aria-selected="false" aria-controls="brief" data-hs-go="2" tabindex="-1"><span class="hs__tab-n">03</span>Market Brief</button>
+          <button type="button" class="hs__tab" role="tab" aria-selected="false" aria-controls="newswire" data-hs-go="3" tabindex="-1"><span class="hs__tab-n">04</span>Newswire</button>
+        </div>
+        <div class="hs__nav">
+          <span class="hs__hint mono" aria-hidden="true"><span class="hs__hint-pin">Role para ver as outras linhas</span><span class="hs__hint-swipe">Deslize para ver as outras linhas</span></span>
+          <span class="hs__count mono" aria-live="polite"><b data-hs-now>1</b> / 4</span>
+          <button type="button" class="hs__arrow" data-hs-step="-1" aria-label="Linha anterior" disabled>‹</button>
+          <button type="button" class="hs__arrow hs__arrow--next" data-hs-step="1" aria-label="Próxima linha">›</button>
+        </div>
+        <span class="hs__progress" aria-hidden="true"><i></i></span>
+      </div>
+      <div class="hs__track">
+
+      <!-- 05.1 · INSIDE STORY -->
+      <div class="hs__panel" id="inside" role="tabpanel" aria-label="Inside Story" data-label="Linhas editoriais · Reels narrativo">
       <div class="wrap">
         <div class="line-grid">
           <div class="line-copy">
@@ -165,175 +104,96 @@
               <span class="eyebrow">Como o interesse é construído</span>
               <p>A capa e a abertura despertam uma pergunta. O roteiro revela como o caso aconteceu, sustentando o interesse ao longo da explicação.</p>
             </div>
-            <div class="credits">
-              <span class="credits__title"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 5 6v5c0 4.5 3 8.2 7 10 4-1.8 7-5.5 7-10V6z"/><path d="m9 12 2 2 4-4"/></svg>Feito por mim, do zero</span>
-              <ul class="credits__list"><li>Pauta e pesquisa</li><li>Roteiro</li><li>Key visual</li><li>Edição de vídeo</li></ul>
-            </div>
           </div>
           <div class="line-media" data-media="insideStory"></div>
-          <aside class="upcoming upcoming--side" data-upcoming="insideStory"></aside>
         </div>
       </div>
-    </section>
+      </div>
 
-    <!-- 06 · MARKET BRIEF -->
-    <section class="slide slide--line slide--dark" id="brief" data-label="Linhas editoriais · Carrossel de notícia">
+      <!-- 05.2 · THE RIPPLE EFFECT -->
+      <div class="hs__panel" id="ripple" role="tabpanel" aria-label="The Ripple Effect" data-label="Linhas editoriais · Carrossel explicativo">
       <div class="wrap">
         <div class="line-grid">
           <div class="line-copy">
             <div data-byline></div>
-            <div class="tags"><span class="pill pill--mono">Linha 02 / 04</span><span class="pill">Carrossel de notícia</span></div>
-            <h2 class="display">Market Brief</h2>
-            <p class="lead">Transformar uma notícia relevante em uma leitura curta que ajude a entender o que está em jogo.</p>
-            <div class="how">
-              <span class="eyebrow">Como o interesse é construído</span>
-              <p>A capa destaca o ângulo mais interessante da notícia. Os slides acrescentam o contexto necessário para compreender sua importância.</p>
-            </div>
-            <div class="credits">
-              <span class="credits__title"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 5 6v5c0 4.5 3 8.2 7 10 4-1.8 7-5.5 7-10V6z"/><path d="m9 12 2 2 4-4"/></svg>Feito por mim, do zero</span>
-              <ul class="credits__list"><li>Pesquisa</li><li>Roteiro</li><li>Key visual</li><li>Design dos slides</li></ul>
-            </div>
-          </div>
-          <div class="line-media" data-media="marketBrief"></div>
-          <aside class="upcoming upcoming--side" data-upcoming="marketBrief"></aside>
-        </div>
-      </div>
-    </section>
-
-    <!-- 07 · NEWSWIRE -->
-    <section class="slide slide--line slide--dark" id="newswire" data-label="Linhas editoriais · Post com leitura na legenda">
-      <div class="wrap">
-        <div class="line-grid">
-          <div class="line-copy">
-            <div data-byline></div>
-            <div class="tags"><span class="pill pill--mono">Linha 03 / 04</span><span class="pill">Post com leitura na legenda</span></div>
-            <h2 class="display">Newswire</h2>
-            <p class="lead">Despertar interesse por um acontecimento com uma manchete direta e uma apresentação visual marcante.</p>
-            <div class="how">
-              <span class="eyebrow">Como o interesse é construído</span>
-              <p>A capa dá destaque à notícia e convida à leitura. A legenda desenvolve os detalhes e o contexto do acontecimento.</p>
-            </div>
-            <div class="credits">
-              <span class="credits__title"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 5 6v5c0 4.5 3 8.2 7 10 4-1.8 7-5.5 7-10V6z"/><path d="m9 12 2 2 4-4"/></svg>Feito por mim, do zero</span>
-              <ul class="credits__list"><li>Pesquisa</li><li>Key visual</li><li>Texto da legenda</li></ul>
-            </div>
-          </div>
-          <div class="line-media" data-media="newswire"></div>
-          <aside class="upcoming upcoming--side" data-upcoming="newswire"></aside>
-        </div>
-      </div>
-    </section>
-
-    <!-- 08 · THE RIPPLE EFFECT -->
-    <section class="slide slide--line slide--dark" id="ripple" data-label="Linhas editoriais · Carrossel explicativo">
-      <div class="wrap">
-        <div class="line-grid">
-          <div class="line-copy">
-            <div data-byline></div>
-            <div class="tags"><span class="pill pill--mono">Linha 04 / 04</span><span class="pill">Carrossel explicativo</span></div>
+            <div class="tags"><span class="pill pill--mono">Linha 02 / 04</span><span class="pill">Carrossel explicativo</span></div>
             <h2 class="display">The Ripple Effect</h2>
             <p class="lead">Despertar curiosidade com histórias que revelam conexões inesperadas entre empresas, política e economia.</p>
             <div class="how">
               <span class="eyebrow">Como o interesse é construído</span>
               <p>A capa apresenta uma tensão. O carrossel desenvolve a explicação até revelar suas causas e consequências.</p>
             </div>
-            <dl class="specs">
-              <div class="spec">
-                <dt class="eyebrow">Pauta</dt>
-                <dd>Assuntos de 1 a 2 meses, em formato de notícia</dd>
-              </div>
-              <div class="spec">
-                <dt class="eyebrow">Retenção</dt>
-                <dd><span class="meter" aria-label="Nível hard"><i></i><i></i><i></i></span>Hard</dd>
-              </div>
-              <div class="spec">
-                <dt class="eyebrow">Capa</dt>
-                <dd>Ilustração estilo HQ, padrão fixo</dd>
-              </div>
-            </dl>
-            <div class="credits">
-              <span class="credits__title"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 5 6v5c0 4.5 3 8.2 7 10 4-1.8 7-5.5 7-10V6z"/><path d="m9 12 2 2 4-4"/></svg>Feito por mim, do zero</span>
-              <ul class="credits__list"><li>Pesquisa</li><li>Roteiro</li><li>Key visual</li><li>Design dos slides</li></ul>
-            </div>
           </div>
           <div class="line-media" data-media="rippleEffect"></div>
-          <aside class="upcoming upcoming--side" data-upcoming="rippleEffect"></aside>
         </div>
+      </div>
+      </div>
+
+      <!-- 05.3 · MARKET BRIEF -->
+      <div class="hs__panel" id="brief" role="tabpanel" aria-label="Market Brief" data-label="Linhas editoriais · Carrossel de notícia">
+      <div class="wrap">
+        <div class="line-grid">
+          <div class="line-copy">
+            <div data-byline></div>
+            <div class="tags"><span class="pill pill--mono">Linha 03 / 04</span><span class="pill">Carrossel de notícia</span></div>
+            <h2 class="display">Market Brief</h2>
+            <p class="lead">Transformar uma notícia relevante em uma leitura curta que ajude a entender o que está em jogo.</p>
+            <div class="how">
+              <span class="eyebrow">Como o interesse é construído</span>
+              <p>A capa destaca o ângulo mais interessante da notícia. Os slides acrescentam o contexto necessário para compreender sua importância.</p>
+            </div>
+          </div>
+          <div class="line-media" data-media="marketBrief"></div>
+        </div>
+      </div>
+      </div>
+
+      <!-- 05.4 · NEWSWIRE -->
+      <div class="hs__panel" id="newswire" role="tabpanel" aria-label="Newswire" data-label="Linhas editoriais · Post com leitura na legenda">
+      <div class="wrap">
+        <div class="line-grid">
+          <div class="line-copy">
+            <div data-byline></div>
+            <div class="tags"><span class="pill pill--mono">Linha 04 / 04</span><span class="pill">Post com leitura na legenda</span></div>
+            <h2 class="display">Newswire</h2>
+            <p class="lead">Despertar interesse por um acontecimento com uma manchete direta e uma apresentação visual marcante.</p>
+            <div class="how">
+              <span class="eyebrow">Como o interesse é construído</span>
+              <p>A capa dá destaque à notícia e convida à leitura. A legenda desenvolve os detalhes e o contexto do acontecimento.</p>
+            </div>
+          </div>
+          <div class="line-media" data-media="newswire"></div>
+        </div>
+      </div>
+      </div>
+
+      </div>
       </div>
     </section>
 
-    <!-- 09 · ESTRATÉGIA DE ALCANCE: POR QUE PRENDE A ATENÇÃO -->
-    <section class="slide slide--algo slide--dark" id="algoritmo" data-label="Linhas editoriais · Estratégia de alcance">
+    <!-- 09 · FREQUÊNCIA ALTA, CONTEÚDO COM CRITÉRIO (texto + 5 critérios) -->
+    <section class="slide slide--dark slide--ed-dark" id="algoritmo" data-label="Linhas editoriais · Frequência">
       <div class="wrap">
-        <div class="algo-grid">
-          <div class="algo-copy">
+        <div class="fq">
+          <div class="fq-copy">
             <div data-byline></div>
-            <span class="algo-tag"><i aria-hidden="true"></i>Estratégia de alcance</span>
-            <h2 class="display">Por que esse conteúdo <span class="algo-red">prende a atenção</span></h2>
-            <p class="lead">Notícias que impactam a vida das pessoas despertam uma curiosidade natural.</p>
-            <p class="algo-statement">Esse tipo de notícia faz as pessoas <b>comentarem, compartilharem e curtirem</b>. O algoritmo lê esses sinais e leva o conteúdo para mais gente.</p>
+            <h2 class="ed-title fq-title">Frequência alta.<br /><span class="ed-title__soft">Conteúdo com critério.</span></h2>
+            <p class="fq-lead">A proposta é publicar com consistência, idealmente todos os dias ou, no máximo, a cada dois dias. O ajuste não está na frequência geral, mas na linha editorial que melhor performa.</p>
           </div>
-          <div class="algo-side">
-            <ol class="algo-flow algo-flow--short" aria-label="Como a atenção vira alcance">
-              <li><span class="algo-flow__n">1</span><div><b>Fato relevante na capa</b></div></li>
-              <li><span class="algo-flow__n">2</span><div><b>A pessoa lê até o fim</b></div></li>
-              <li><span class="algo-flow__n">3</span><div><b>Ela comenta, compartilha e curte</b></div></li>
-              <li><span class="algo-flow__n">4</span><div><b>O algoritmo entende que é relevante</b></div></li>
-              <li class="algo-flow__end"><span class="algo-flow__n"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 17 10 11l4 4 6-7"/><path d="M15 8h5v5"/></svg></span><div><b>Mais alcance</b></div></li>
-            </ol>
-            <p class="algo-safe algo-safe--short"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 5 6v5c0 4.5 3 8.2 7 10 4-1.8 7-5.5 7-10V6z"/><path d="m9 12 2 2 4-4"/></svg><span>A StoxRadar informa, com tom editorial e sem sensacionalismo.</span></p>
+          <div class="fq-side">
+            <p class="fq-callout">
+              <span class="fq-callout__ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3 3 8l9 5 9-5z"/><path d="m3 12.5 9 5 9-5M3 17l9 5 9-5"/></svg></span>
+              <span>Não basta postar. É preciso definir o que dizer, como apresentar e quando publicar.</span>
+            </p>
+            <ul class="fq-cards">
+              <li class="fq-card"><span class="fq-card__ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg></span><b>Hook</b></li>
+              <li class="fq-card"><span class="fq-card__ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></span><b>Momento</b></li>
+              <li class="fq-card"><span class="fq-card__ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="2.5"/><circle cx="9" cy="9" r="1.8"/><path d="m20.5 15.5-5-5L5 21"/></svg></span><b>Representação</b></li>
+              <li class="fq-card"><span class="fq-card__ico fq-card__ico--ring" aria-hidden="true"><svg viewBox="0 0 24 24"><path class="fill" d="M9.5 7.5v9l7-4.5z"/></svg></span><b>Retenção</b></li>
+              <li class="fq-card"><span class="fq-card__ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 20v-3M9 20v-6M14 20v-9M19 20V5"/></svg></span><b>Performance</b></li>
+            </ul>
           </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 10 · FREQUÊNCIA DAS LINHAS EDITORIAIS -->
-    <section class="slide" id="frequencia" data-label="Linhas editoriais · Frequência">
-      <div class="wrap">
-        <div class="freq-grid">
-          <div class="freq-copy">
-            <div data-byline></div>
-            <h2 class="display">Frequência<span class="freq-q">?</span></h2>
-            <p class="lead">Cada linha tem o seu ritmo. O vídeo é a prioridade. As linhas de notícia entram quando houver um fato relevante.</p>
-          </div>
-          <ol class="freq-list">
-            <li class="freq-item freq-item--top">
-              <img class="freq-item__cover" data-cover="insideStory" alt="" loading="lazy" />
-              <div class="freq-item__body">
-                <span class="freq-item__n">01 · Reels</span>
-                <h3>Inside Story</h3>
-                <span class="freq-meter" aria-label="Frequência alta"><i></i><i></i><i></i><i></i></span>
-              </div>
-              <span class="freq-tag freq-tag--top">Prioridade</span>
-            </li>
-            <li class="freq-item">
-              <img class="freq-item__cover" data-cover="marketBrief" alt="" loading="lazy" />
-              <div class="freq-item__body">
-                <span class="freq-item__n">02 · Carrossel</span>
-                <h3>Market Brief</h3>
-                <span class="freq-item__when">Quando houver notícia relevante</span>
-              </div>
-              <span class="freq-tag">A definir</span>
-            </li>
-            <li class="freq-item">
-              <img class="freq-item__cover" data-cover="newswire" alt="" loading="lazy" />
-              <div class="freq-item__body">
-                <span class="freq-item__n">03 · Post + legenda</span>
-                <h3>Newswire</h3>
-                <span class="freq-item__when">Quando houver notícia relevante</span>
-              </div>
-              <span class="freq-tag">A definir</span>
-            </li>
-            <li class="freq-item">
-              <img class="freq-item__cover" data-cover="rippleEffect" alt="" loading="lazy" />
-              <div class="freq-item__body">
-                <span class="freq-item__n">04 · Carrossel</span>
-                <h3>The Ripple Effect</h3>
-                <span class="freq-item__when">Quando houver notícia relevante</span>
-              </div>
-              <span class="freq-tag">A definir</span>
-            </li>
-          </ol>
+          <p class="ed-close fq-close">Consistência na publicação. Critério na execução.</p>
         </div>
       </div>
     </section>
@@ -352,38 +212,113 @@
       </div>
     </section>
 
-    <!-- 12 · PERFIL -->
-    <section class="slide" id="perfil" data-label="Estratégia de crescimento · Funil e perfil">
-      <div class="wrap">
-        <div class="profile-grid profile-grid--3">
-          <div class="profile-title">
-            <div data-byline></div>
-            <h2 class="display">Conteúdo para alcançar. <span class="muted">Perfil para converter.</span></h2>
+    <!-- 12 · PERFIL: o objetivo é alcançar pessoas (topo de funil × fundo de funil) -->
+    <section class="slide slide--funnel" id="perfil" data-label="Estratégia de crescimento · Topo de funil">
+      <div class="wrap fn">
+        <header class="fn-head">
+          <h2 class="fn-title">O objetivo é <span>alcançar pessoas.</span></h2>
+          <p class="fn-lead">Parte desse público pode querer saber mais sobre a newsletter. Por isso, o Instagram organiza a conversão em duas frentes: <b>Stories para a base de seguidores</b> e o <b>perfil para quem chega agora.</b></p>
+        </header>
+
+        <div class="fn-grid fn-grid--top">
+          <svg class="fn-links" aria-hidden="true"></svg>
+
+          <!-- Esquerda: topo de funil -->
+          <div class="fn-col fn-col--top">
+            <span class="fn-pill fn-pill--red">Topo de funil</span>
+            <h3 class="fn-h">Conteúdo para alcançar e atrair.</h3>
+            <p class="fn-p">Reels e carrosséis para gerar visibilidade e levar novas pessoas ao perfil.</p>
+            <ul class="fn-list fn-list--red" data-fn-bracket>
+              <li>
+                <span class="fn-ico"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M3 8.5h18M8 3l3 5.5M13.5 3l3 5.5"/><path class="fill" d="M10 12v5.5l4.8-2.75z"/></svg></span>
+                <div><b>Reels</b><span>Vídeos curtos com alto potencial de alcance.</span></div>
+              </li>
+              <li>
+                <span class="fn-ico"><svg viewBox="0 0 24 24"><path d="M12 3 3 8l9 5 9-5z"/><path d="m3 12.5 9 5 9-5M3 17l9 5 9-5"/></svg></span>
+                <div><b>Carrosséis</b><span>Conteúdo educativo, análises e insights.</span></div>
+              </li>
+            </ul>
           </div>
-          <figure class="phone-wrap">
-            <div class="phone">
-              <div class="phone__notch"></div>
-              <div class="ig">
-                <div class="ig__top"><strong>stoxradar</strong><span class="vbadge vbadge--sm" data-badge></span></div>
-                <div class="ig__head">
-                  <span class="ig__logo" aria-hidden="true"></span>
-                  <div class="ig__stats"><span><b>—</b>posts</span><span><b>—</b>seguidores</span><span><b>—</b>seguindo</span></div>
+
+          <!-- Direita: o perfil com a grade marcada por etapa do funil -->
+          <div class="fn-phones">
+            <!-- Celular 1: a grade do perfil marcada por etapa do funil -->
+            <div class="fn-phone" data-fn-phone="1">
+              <div class="fn-screen">
+                <span class="fn-notch"></span>
+                <div class="fn-ig-top"><b>stoxradar</b><span class="vbadge" data-badge></span></div>
+                <div class="fn-ig-head">
+                  <span class="fn-ig-logo"></span>
+                  <div class="fn-ig-stats"><span><b>—</b>posts</span><span><b>—</b>seguidores</span><span><b>—</b>seguindo</span></div>
                 </div>
-                <p class="ig__bio"><b>StoxRadar</b><br />Mercado, empresas e economia<br /><span class="ig__link">stoxradar.com/newsletter</span></p>
-                <span class="ig__cta">Inscreva-se na newsletter</span>
-                <div class="ig__hl"><span><i></i>Sobre</span><span><i class="hl-ink"></i>Newsletter</span><span><i></i>Blog</span><span><i></i>Mais</span></div>
-                <div class="ig__grid" id="ig-grid"></div>
+                <p class="fn-ig-bio"><b>StoxRadar</b><br />Mercado, empresas e economia<br /><span>stoxradar.com/newsletter</span></p>
+                <div class="fn-ig-btns"><span class="is-blue">Seguir</span><span>Mensagem</span></div>
+                <div class="fn-ig-hl"><span><i></i>Sobre</span><span><i class="is-green"></i>Newsletter</span><span><i></i>Blog</span><span><i></i>Mais</span></div>
+                <div class="fn-ig-tabs"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M4 9.3h16M4 14.7h16M9.3 4v16M14.7 4v16"/></svg><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3.5"/><path d="M4 8.5h16M8.5 4l2.5 4.5M13 4l2.5 4.5"/><path class="fill" d="M10.3 11.5v5l4.2-2.5z"/></svg><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><circle cx="12" cy="10.5" r="2.6"/><path d="M7.5 17c1-2.2 2.6-3.2 4.5-3.2s3.5 1 4.5 3.2"/></svg></div>
+                <div class="fn-ig-grid" data-fn-grid>
+                  <span class="fn-cell fn-cell--green"><svg viewBox="0 0 24 24"><path class="fill" d="M15 3l6 6-3 1-3 3 .5 5L13 20l-4-4-5 5-1-1 5-5-4-4 2-2.5 5 .5 3-3z"/></svg>Fundo<br />de funil</span>
+                  <span class="fn-cell"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M3 8.5h18M8 3l3 5.5M13.5 3l3 5.5"/><path class="fill" d="M10 12v5.5l4.8-2.75z"/></svg>Topo<br />de funil</span>
+                  <span class="fn-cell"><svg viewBox="0 0 24 24"><path d="M12 3 3 8l9 5 9-5z"/><path d="m3 12.5 9 5 9-5M3 17l9 5 9-5"/></svg>Topo<br />de funil</span>
+                  <span class="fn-cell"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M3 8.5h18M8 3l3 5.5M13.5 3l3 5.5"/><path class="fill" d="M10 12v5.5l4.8-2.75z"/></svg>Topo<br />de funil</span>
+                  <span class="fn-cell"><svg viewBox="0 0 24 24"><path d="M12 3 3 8l9 5 9-5z"/><path d="m3 12.5 9 5 9-5M3 17l9 5 9-5"/></svg>Topo<br />de funil</span>
+                  <span class="fn-cell"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M3 8.5h18M8 3l3 5.5M13.5 3l3 5.5"/><path class="fill" d="M10 12v5.5l4.8-2.75z"/></svg>Topo<br />de funil</span>
+                  <span class="fn-cell"><svg viewBox="0 0 24 24"><path d="M12 3 3 8l9 5 9-5z"/><path d="m3 12.5 9 5 9-5M3 17l9 5 9-5"/></svg>Topo<br />de funil</span>
+                  <span class="fn-cell"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M3 8.5h18M8 3l3 5.5M13.5 3l3 5.5"/><path class="fill" d="M10 12v5.5l4.8-2.75z"/></svg>Topo<br />de funil</span>
+                  <span class="fn-cell"><svg viewBox="0 0 24 24"><path d="M12 3 3 8l9 5 9-5z"/><path d="m3 12.5 9 5 9-5M3 17l9 5 9-5"/></svg>Topo<br />de funil</span>
+                </div>
               </div>
             </div>
-            <figcaption class="mono">Simulação conceitual do perfil</figcaption>
-          </figure>
-          <div class="profile-defs">
-            <dl class="defs defs--fnl">
-              <div class="def"><span class="mini-fnl" data-on="1" role="img" aria-label="Topo de funil"><i></i><i></i><i></i></span><dt><span class="def__stage mono">Topo de funil</span>Reels e carrosséis</dt><dd>O conteúdo do dia a dia busca alcance, visibilidade e novas pessoas para o perfil.</dd></div>
-              <div class="def"><span class="mini-fnl" data-on="2" role="img" aria-label="Meio de funil"><i></i><i></i><i></i></span><dt><span class="def__stage mono">Meio de funil</span>Stories e destaques</dt><dd>Mantêm a marca presente e reúnem materiais para quem quer explorar mais.</dd></div>
-              <div class="def"><span class="mini-fnl" data-on="3" role="img" aria-label="Fundo de funil"><i></i><i></i><i></i></span><dt><span class="def__stage mono">Fundo de funil</span>Post fixado</dt><dd>Apresenta a StoxRadar, explica a newsletter e convida à inscrição.</dd></div>
-              <div class="def"><span class="mini-fnl" data-on="3" role="img" aria-label="Fundo de funil"><i></i><i></i><i></i></span><dt><span class="def__stage mono">Fundo de funil</span>Destaque e link da bio</dt><dd>Conduzem à inscrição. Outros destaques e links podem oferecer blog e conteúdos complementares.</dd></div>
-            </dl>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 12b · FUNDO DE FUNIL: perfil para quem deseja saber mais (logo abaixo do topo de funil) -->
+    <section class="slide slide--funnel slide--funnel-b" id="perfil-fundo" data-label="Estratégia de crescimento · Fundo de funil">
+      <div class="wrap fn">
+        <div class="fn-grid fn-grid--bottom">
+          <svg class="fn-links" aria-hidden="true"></svg>
+          <div class="fn-phones">
+            <!-- Celular 2: o caminho de quem quer saber mais (destaque + link da bio) -->
+            <div class="fn-phone" data-fn-phone="2">
+              <div class="fn-screen">
+                <span class="fn-notch"></span>
+                <div class="fn-ig-top"><b>stoxradar</b><span class="vbadge" data-badge></span></div>
+                <div class="fn-ig-head">
+                  <span class="fn-ig-logo"></span>
+                  <div class="fn-ig-stats"><span><b>—</b>posts</span><span><b>—</b>seguidores</span><span><b>—</b>seguindo</span></div>
+                </div>
+                <p class="fn-ig-bio"><b>StoxRadar</b><br />Mercado, empresas e economia<br /><span class="fn-ig-link" data-fn-target="bio">stoxradar.com/newsletter</span></p>
+                <div class="fn-ig-btns"><span class="is-blue">Seguir</span><span>Mensagem</span></div>
+                <div class="fn-ig-hl"><span><i></i>Sobre</span><span data-fn-target="hl"><i class="is-green"></i>Newsletter</span><span><i></i>Blog</span><span><i></i>Mais</span></div>
+                <div class="fn-ig-tabs"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M4 9.3h16M4 14.7h16M9.3 4v16M14.7 4v16"/></svg><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3.5"/><path d="M4 8.5h16M8.5 4l2.5 4.5M13 4l2.5 4.5"/><path class="fill" d="M10.3 11.5v5l4.2-2.5z"/></svg><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><circle cx="12" cy="10.5" r="2.6"/><path d="M7.5 17c1-2.2 2.6-3.2 4.5-3.2s3.5 1 4.5 3.2"/></svg></div>
+                <div class="fn-ig-grid fn-ig-grid--empty"><span class="fn-cell fn-cell--green" data-fn-target="pin"><svg viewBox="0 0 24 24"><path class="fill" d="M15 3l6 6-3 1-3 3 .5 5L13 20l-4-4-5 5-1-1 5-5-4-4 2-2.5 5 .5 3-3z"/></svg>Post<br />fixado</span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Direita: fundo de funil -->
+          <div class="fn-col fn-col--bottom">
+            <span class="fn-pill fn-pill--green">Fundo de funil</span>
+            <h3 class="fn-h">Perfil para quem deseja saber mais.</h3>
+            <ul class="fn-list fn-list--green">
+              <li data-fn-from="bio">
+                <span class="fn-ico fn-ico--line"><svg viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg></span>
+                <div><b>Link na bio <em>Fundo de funil</em></b><span>Leva para uma landing page com mais detalhes e o formulário de inscrição.</span></div>
+              </li>
+              <li data-fn-from="hl">
+                <span class="fn-ico fn-ico--ring"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5"/><circle class="fill" cx="12" cy="12" r="6.5"/></svg></span>
+                <div><b>Destaque (Newsletter) <em>Fundo de funil</em></b><span>Apresenta a newsletter e os principais benefícios.</span></div>
+              </li>
+              <li data-fn-from="pin">
+                <span class="fn-ico"><svg viewBox="0 0 24 24"><path class="fill" d="M15 3l6 6-3 1-3 3 .5 5L13 20l-4-4-5 5-1-1 5-5-4-4 2-2.5 5 .5 3-3z"/></svg></span>
+                <div><b>Post fixado <em>Fundo de funil</em></b><span>Explica a newsletter e convida para a inscrição.</span></div>
+              </li>
+              <li>
+                <span class="fn-ico fn-ico--line"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5" stroke-dasharray="4.2 2.6"/><path d="M12 8v8M8 12h8"/></svg></span>
+                <div><b>Stories <em>Fundo de funil</em></b><span>2 posts por semana convidando os seguidores a conhecerem a newsletter.</span></div>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
@@ -395,33 +330,39 @@
         <div class="deliver-grid">
           <div class="deliver-copy">
             <div data-byline></div>
-            <h2 class="display">Da pauta às métricas, <span class="muted">eu cuido de tudo</span></h2>
-            <p class="lead">Um processo completo, feito por uma pessoa só, do começo ao fim.</p>
+            <h2 class="display deliver-title">Estratégia, criação e análise em um processo integrado, combinando experiência profissional e inteligência artificial.</h2>
           </div>
-          <div class="circuit circuit--simple" role="img" aria-label="Igor Souza conectado a pesquisa e pauta, roteiro e texto, design, edição de vídeo, legendas e métricas, usando AI como ferramenta">
+          <div class="circuit circuit--v5" aria-label="Igor Souza, com a IA como apoio, cuida de pesquisa e estratégia editorial, copywriting, design e UX, edição de vídeo, e métricas e otimização">
             <svg class="circuit__svg" aria-hidden="true"></svg>
-            <div class="circuit__me">
-              <span class="circuit__photo"><img src="assets/igor.webp" alt="" width="128" height="128" /></span>
-              <span class="circuit__name">Igor Souza <span class="vbadge vbadge--sm" data-badge></span></span>
-              <span class="circuit__role">Direção</span>
+            <div class="circuit__side">
+              <!-- Card do Igor: foto larga, nome e papel -->
+              <div class="circuit__card">
+                <span class="circuit__photo circuit__photo--wide"><img src="assets/igor.webp" alt="Igor Souza" width="240" height="170" /></span>
+                <span class="circuit__name">Igor Souza <span class="vbadge vbadge--sm" data-badge></span></span>
+                <span class="circuit__sub">Estratégia • direção criativa • execução</span>
+              </div>
+              <!-- IA como apoio: ligada ao card por uma linha tracejada -->
+              <div class="circuit__aid">
+                <span class="circuit__aid-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><defs><linearGradient id="aid-grad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9fc0ff"/><stop offset="1" stop-color="#3b6dff"/></linearGradient></defs><path fill="url(#aid-grad)" d="M10 3c.5 3.8 2.2 5.5 6 6-3.8.5-5.5 2.2-6 6-.5-3.8-2.2-5.5-6-6 3.8-.5 5.5-2.2 6-6z"/><path fill="url(#aid-grad)" d="M18 13c.3 2.1 1.1 2.9 3.2 3.2-2.1.3-2.9 1.1-3.2 3.2-.3-2.1-1.1-2.9-3.2-3.2 2.1-.3 2.9-1.1 3.2-3.2z"/></svg></span>
+                <span class="circuit__aid-text">IA como apoio</span>
+                <span class="circuit__aid-info" tabindex="0" aria-label="A IA ajuda a pesquisar e produzir mais rápido. As decisões são minhas.">i<span class="circuit__aid-tip" role="tooltip">A IA ajuda a pesquisar e produzir mais rápido. As decisões são minhas.</span></span>
+              </div>
             </div>
             <ul class="circuit__skills">
-              <li class="skill" style="--d:0; --c1:#3b6dff; --c2:#7aa2ff"><span class="skill__icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg></span><b>Pesquisa e pauta</b></li>
-              <li class="skill" style="--d:1; --c1:#ffffff; --c2:#d9dde6"><span class="skill__icon skill__icon--light"><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 12h7M9 16h5"/></svg></span><b>Roteiro e texto</b></li>
-              <li class="skill" style="--d:2; --c1:#ff7a45; --c2:#ffb08a"><span class="skill__icon"><svg viewBox="0 0 24 24"><path d="M4 20c4-1 5-3 6-6l6-6a2.1 2.1 0 0 1 3 3l-6 6c-3 1-5 2-6 6"/><path d="m14 6 4 4"/></svg></span><b>Design</b></li>
+              <li class="skill" style="--d:0; --c1:#3b6dff; --c2:#7aa2ff"><span class="skill__icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg></span><b>Pesquisa e estratégia editorial</b></li>
+              <li class="skill" style="--d:1; --c1:#ffffff; --c2:#d9dde6"><span class="skill__icon skill__icon--light"><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 12h7M9 16h5"/></svg></span><b>Copywriting</b></li>
+              <li class="skill" style="--d:2; --c1:#ff7a45; --c2:#ffb08a"><span class="skill__icon"><svg viewBox="0 0 24 24"><path d="M4 20c4-1 5-3 6-6l6-6a2.1 2.1 0 0 1 3 3l-6 6c-3 1-5 2-6 6"/><path d="m14 6 4 4"/></svg></span><b>Design e UX</b></li>
               <li class="skill" style="--d:3; --c1:#6a4dff; --c2:#a08bff"><span class="skill__icon"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="13" height="12" rx="2"/><path d="m16 10 5-3v10l-5-3"/></svg></span><b>Edição de vídeo</b></li>
-              <li class="skill" style="--d:4; --c1:#ffffff; --c2:#d9dde6"><span class="skill__icon skill__icon--light"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M7 11h6M7 15h10"/></svg></span><b>Legendas</b></li>
-              <li class="skill" style="--d:5; --c1:#1fae5b; --c2:#6ee7a0"><span class="skill__icon"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span><b>Métricas</b></li>
+              <li class="skill" style="--d:4; --c1:#1fae5b; --c2:#6ee7a0"><span class="skill__icon"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span><b>Métricas e otimização</b></li>
             </ul>
-            <p class="circuit__note"><b>A AI acelera a criação.</b> A direção é toda minha.</p>
+            <p class="circuit__note"><b>A IA otimiza processos.</b> A experiência profissional orienta as decisões.</p>
           </div>
         </div>
       </div>
     </section>
 
     <!-- 14 · ENCERRAMENTO -->
-    <section class="slide slide--close" id="fim" data-label="StoxRadar">
-      <div class="orb orb--center" aria-hidden="true"><span></span><span></span><span></span></div>
+    <section class="slide slide--close slide--dark slide--wave" id="fim" data-label="StoxRadar" data-wave-mesh>
       <div class="wrap close">
         <img class="close__avatar" src="assets/igor.webp" alt="Igor Souza" width="144" height="144" />
         <blockquote class="close__quote">“A IA abriu novas possibilidades para criar conteúdo de qualidade. Acredito que as marcas capazes de conquistar atenção, sustentar o interesse e ampliar seu alcance têm uma grande oportunidade de transformar boas ideias em grandes resultados.”</blockquote>
@@ -441,5 +382,6 @@
 
   <script src="content.js"></script>
   <script src="main.js"></script>
+  <script src="i18n.js"></script>
 </body>
 </html>

@@ -1316,3 +1316,503 @@ button.ref__media:hover { transform: translateY(-3px); box-shadow: 0 18px 40px -
 .line-media > .post { overflow: visible; }
 .reels--cover { overflow: visible; }
 .reels--cover .reels__cover, .reels--cover::before { border-radius: 30px; }
+
+/* =========================================================
+   SLIDER HORIZONTAL · as 4 linhas editoriais
+   (Inside Story, Market Brief, Newswire, The Ripple Effect)
+   • Computador (.is-pinned): a seção fica presa na tela e a
+     rolagem vertical passa as linhas para o lado.
+   • Celular / tablet: as linhas passam deslizando com o dedo.
+   ========================================================= */
+.slide--hs { flex-direction: column; justify-content: center; align-items: stretch; padding-left: 0; padding-right: 0; }
+.hs__sticky { display: flex; flex-direction: column; justify-content: center; gap: clamp(4px, 1vh, 12px); width: 100%; }
+.slide--hs .hs__bar { width: calc(100% - 2 * var(--pad-x)); display: flex; align-items: center; justify-content: space-between; gap: 12px 16px; flex-wrap: wrap; }
+.hs__tabs { display: flex; gap: 4px; padding: 4px; border-radius: 999px; background: rgba(255,255,255,.04); border: 1px solid var(--line); max-width: 100%; overflow-x: auto; scrollbar-width: none; }
+.hs__tabs::-webkit-scrollbar { display: none; }
+.hs__tab { display: inline-flex; align-items: center; gap: 8px; height: 34px; padding: 0 15px 0 12px; border-radius: 999px; font-size: 13.5px; font-weight: 500; color: var(--muted); white-space: nowrap; transition: color .25s ease, background .25s ease; }
+.hs__tab-n { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; opacity: .75; }
+.hs__tab:hover { color: var(--text); }
+.hs__tab.is-on { background: var(--ink); color: var(--on-ink); }
+.hs__tab:focus-visible, .hs__arrow:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.hs__nav { display: flex; align-items: center; gap: 8px; }
+.hs__hint { color: var(--muted); font-size: 11px; margin-right: 10px; display: inline-flex; align-items: center; gap: 8px; transition: opacity .3s ease; }
+.hs__hint::after { content: '↓'; display: inline-block; animation: hs-hint 1.6s ease-in-out infinite; color: var(--text); }
+.slide--hs.is-moved .hs__hint { opacity: 0; }
+.slide--hs:not(.is-pinned) .hs__hint::after { content: '→'; animation-name: hs-hint-x; }
+@keyframes hs-hint { 0%, 100% { transform: translateY(-2px); } 50% { transform: translateY(3px); } }
+@keyframes hs-hint-x { 0%, 100% { transform: translateX(-2px); } 50% { transform: translateX(4px); } }
+.hs__count { color: var(--muted); margin-right: 6px; }
+.hs__count b { color: var(--text); font-weight: 500; }
+.hs__arrow { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; border: 1px solid var(--line-strong); background: rgba(255,255,255,.06); color: var(--text); font-size: 22px; line-height: 1; padding-bottom: 2px; transition: transform .2s ease, opacity .2s ease; }
+.hs__arrow--next { background: var(--ink); border-color: var(--ink); color: var(--on-ink); }
+.hs__arrow:hover { transform: translateY(-1px); }
+.hs__arrow[disabled] { opacity: .3; pointer-events: none; }
+/* linha de progresso: mostra quanto falta para ver as 4 linhas */
+.hs__progress { flex: 1 0 100%; height: 2px; border-radius: 2px; background: var(--line); overflow: hidden; }
+.hs__progress i { display: block; height: 100%; width: 100%; background: var(--ink); transform-origin: left center; transform: scaleX(var(--hs-p, .25)); transition: transform .12s linear; }
+
+.hs__track { display: flex; overflow: auto hidden; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+.hs__track::-webkit-scrollbar { display: none; }
+.hs__panel { flex: 0 0 100%; min-width: 0; scroll-snap-align: start; scroll-snap-stop: always; display: flex; align-items: center; padding: clamp(10px, 2vh, 28px) var(--pad-x); }
+.hs__panel > .wrap { min-width: 0; transition: opacity .45s ease; }
+.hs__panel:not(.is-on) > .wrap { opacity: .25; }
+.hs__snap { display: none; }
+
+/* ---- Computador: seção presa + rolagem horizontal ---- */
+.slide--hs.is-pinned { display: block; padding: 0; min-height: 0; height: calc(var(--hs-n, 4) * 100vh); overflow: clip; }
+.slide--hs.is-pinned .hs__sticky { position: sticky; top: 0; height: 100vh; overflow: hidden; padding: calc(60px + clamp(16px, 3vh, 36px)) 0 clamp(16px, 3vh, 36px); }
+.slide--hs.is-pinned .hs__track { overflow: visible; scroll-snap-type: none; will-change: transform; }
+.slide--hs.is-pinned .hs__panel { scroll-snap-align: none; }
+.slide--hs.is-pinned .hs__panel > .wrap { transition: none; }
+/* pontos de parada da rolagem: um por linha, para a tela assentar em cada uma */
+.slide--hs.is-pinned .hs__snap { display: block; position: absolute; left: 0; width: 1px; height: 100vh; top: calc(var(--k) * 100vh); scroll-snap-align: start; pointer-events: none; }
+
+/* Setas ↑↓ do canto somem enquanto o slider está na tela */
+.pager { transition: opacity .3s ease, transform .3s ease; }
+.hs-active .pager { opacity: 0; transform: translateY(12px); pointer-events: none; }
+
+@media (max-width: 760px) {
+  .hs__panel { align-items: flex-start; }
+  .hs__count { display: none; }
+}
+@media (max-width: 520px) {
+  .hs__arrow { display: none; }
+  .hs__hint { margin-right: 0; }
+  .hs__tab-n { display: none; }
+  .hs__tab { padding: 0 12px; font-size: 13px; }
+}
+@media (prefers-reduced-motion: reduce) { .hs__panel > .wrap { transition: none; } .hs__hint::after { animation: none; } }
+
+/* Linhas editoriais em tela menor: uma coluna só (a regra de desktop acima sobrescrevia esta) */
+@media (max-width: 1024px) {
+  .slide--line .line-grid { grid-template-columns: minmax(0, 1fr); justify-content: stretch; }
+  .slide--line .line-copy { max-width: none; }
+}
+
+/* Notebook com tela baixa: aperta o respiro do slider preso para tudo caber */
+@media (max-height: 800px) {
+  .slide--hs.is-pinned .hs__sticky { padding-top: calc(60px + 10px); padding-bottom: 8px; gap: 4px; }
+}
+.hs__hint-swipe { display: none; }
+.slide--hs:not(.is-pinned) .hs__hint-pin { display: none; }
+.slide--hs:not(.is-pinned) .hs__hint-swipe { display: inline; }
+
+/* ---------- Circuito v4: Igor → chip "AI" → habilidades ---------- */
+.circuit--hub { width: min(680px, 50vw); grid-template-columns: auto auto minmax(0, 1fr); column-gap: clamp(40px, 4.4vw, 68px); }
+.circuit__hub { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.ai-chip--hub { position: relative; right: auto; bottom: auto; width: 62px; height: 62px; transform: none; }
+.ai-chip--hub .ai-chip__core { font-size: 21px; box-shadow: 0 0 0 4px #0b0c12, 0 0 0 5px rgba(255,255,255,.14), 0 16px 34px -10px rgba(0,0,0,.95), inset 0 1px 0 rgba(255,255,255,.25); }
+.ai-chip--hub .ai-chip__core svg { width: 17px; height: 17px; margin-top: -10px; }
+.circuit__hub-label { font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: rgba(244,243,239,.6); }
+.circuit__pin--chip { fill: #0b0b0a; stroke: #fff; filter: drop-shadow(0 0 5px rgba(255,255,255,.55)); }
+.js .slide:not(.is-in) .circuit__hub { opacity: 0; transform: scale(.85); }
+.js .slide.is-in .circuit__hub { transition: opacity .5s ease .15s, transform .6s cubic-bezier(.2,.8,.2,1) .15s; }
+@media (max-width: 1024px) { .circuit--hub { width: 100%; } }
+@media (max-width: 560px) {
+  .circuit--hub { grid-template-columns: 1fr; }
+  .circuit--hub .circuit__hub { flex-direction: row; justify-content: center; top: 0 !important; }
+}
+
+/* Chip "AI" sóbrio: preto liso, borda fina, sem brilho, sem estrela e sem flutuar */
+.ai-chip--hub { width: 58px; height: 58px; animation: none; }
+.ai-chip--hub .ai-chip__pins {
+  inset: -6px; opacity: .32;
+  background:
+    linear-gradient(90deg, transparent 28%, #fff 28% 32%, transparent 32% 48%, #fff 48% 52%, transparent 52% 68%, #fff 68% 72%, transparent 72%) top / 100% 4px no-repeat,
+    linear-gradient(90deg, transparent 28%, #fff 28% 32%, transparent 32% 48%, #fff 48% 52%, transparent 52% 68%, #fff 68% 72%, transparent 72%) bottom / 100% 4px no-repeat,
+    linear-gradient(0deg, transparent 28%, #fff 28% 32%, transparent 32% 48%, #fff 48% 52%, transparent 52% 68%, #fff 68% 72%, transparent 72%) left / 4px 100% no-repeat,
+    linear-gradient(0deg, transparent 28%, #fff 28% 32%, transparent 32% 48%, #fff 48% 52%, transparent 52% 68%, #fff 68% 72%, transparent 72%) right / 4px 100% no-repeat;
+}
+.ai-chip--hub .ai-chip__core {
+  border-radius: 12px; gap: 0;
+  background: linear-gradient(180deg, #141414, #050505);
+  border: 1px solid rgba(255,255,255,.22);
+  box-shadow: 0 0 0 4px #0b0c12, 0 14px 30px -12px rgba(0,0,0,.95), inset 0 1px 0 rgba(255,255,255,.08);
+  font-family: var(--sans); font-weight: 600; font-size: 17px; letter-spacing: .06em; color: #f4f3ef;
+}
+.ai-chip--hub .ai-chip__core::after { content: none; }
+.ai-chip--hub .ai-chip__core::before { content: ''; position: absolute; inset: 6px; border-radius: 7px; border: 1px solid rgba(255,255,255,.07); pointer-events: none; }
+.circuit__pin--chip { fill: #0b0b0a; stroke: rgba(255,255,255,.7); filter: none; }
+
+/* Slide "O que eu entrego": headline longa, em tamanho menor para caber sem apertar */
+.deliver-title { font-size: clamp(26px, min(2.7vw, 5vh), 44px); line-height: 1.12; max-width: 20ch; margin-bottom: 0; }
+
+/* =========================================================
+   Circuito v5 (slide "O que eu entrego"):
+   card do Igor + "IA como apoio" → trilhas → habilidades
+   ========================================================= */
+.circuit--v5 { width: min(720px, 52vw); grid-template-columns: auto minmax(0, 1fr); column-gap: clamp(56px, 6vw, 92px); align-items: center;
+  padding: clamp(24px, 3.4vh, 38px) clamp(24px, 2.6vw, 38px) clamp(18px, 2.6vh, 28px); border-radius: 30px;
+  background:
+    radial-gradient(55% 60% at 22% 45%, rgba(59,109,255,.22), transparent 70%),
+    radial-gradient(45% 50% at 100% 0%, rgba(255,122,45,.16), transparent 70%),
+    linear-gradient(160deg, #0f1220, #080a12); }
+.slide--dark .circuit--v5 { box-shadow: 0 0 60px -18px rgba(59,109,255,.55), 0 0 90px -40px rgba(255,130,50,.5); }
+/* contorno com brilho: azul em volta e laranja no canto superior direito */
+.circuit--v5::after { content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1.5px; pointer-events: none; z-index: 3;
+  background: linear-gradient(215deg, #ff9a4a 0%, rgba(255,154,74,.35) 18%, rgba(122,162,255,.55) 42%, rgba(59,109,255,.4) 72%, rgba(122,162,255,.75) 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); }
+
+.circuit__side { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: flex-start; gap: clamp(26px, 4vh, 40px); }
+.circuit__card { position: relative; width: clamp(190px, 15vw, 236px); display: flex; flex-direction: column; align-items: center; text-align: center;
+  padding: 0 14px clamp(12px, 1.8vh, 18px); border-radius: 22px; border: 1px solid rgba(122,162,255,.38);
+  background: linear-gradient(180deg, rgba(30,38,70,.55), rgba(14,18,34,.75)); box-shadow: 0 0 34px -12px rgba(59,109,255,.6), inset 0 1px 0 rgba(255,255,255,.06); }
+.circuit__photo--wide { width: calc(100% + 28px); margin: -1px -14px 0; aspect-ratio: 1.4; border-radius: 22px; padding: 2.5px; }
+.circuit__photo--wide img { border-radius: 20px; object-position: center 22%; }
+.circuit--v5 .circuit__name { margin-top: clamp(10px, 1.6vh, 14px); font-size: clamp(16px, 1.3vw, 19px); font-weight: 600; }
+.circuit--v5 .circuit__name .vbadge { width: 18px; height: 18px; }
+.circuit__sub { margin-top: 4px; font-size: 12.5px; line-height: 1.45; color: rgba(244,243,239,.6); text-wrap: balance; }
+
+.circuit__aid { position: relative; display: inline-flex; align-items: center; gap: 10px; margin-left: clamp(36px, 3.4vw, 52px); height: 44px; padding: 0 8px 0 14px; border-radius: 999px;
+  border: 1px solid rgba(122,162,255,.55); background: rgba(10,14,28,.85); box-shadow: 0 0 22px -6px rgba(59,109,255,.55), inset 0 0 12px -6px rgba(122,162,255,.5); }
+.circuit__aid-icon svg { display: block; width: 22px; height: 22px; filter: drop-shadow(0 0 6px rgba(59,109,255,.7)); }
+.circuit__aid-text { font-size: 13.5px; font-weight: 600; color: #fff; white-space: nowrap; }
+.circuit__aid-info { position: relative; width: 24px; height: 24px; margin-left: 10px; border-radius: 50%; display: grid; place-items: center; cursor: help;
+  border: 1px solid rgba(255,255,255,.22); background: rgba(255,255,255,.04); color: rgba(244,243,239,.8); font-family: Georgia, serif; font-size: 12.5px; font-style: italic; }
+.circuit__aid-tip { position: absolute; left: 50%; bottom: calc(100% + 10px); transform: translate(-50%, 4px); width: 220px; padding: 9px 12px; border-radius: 10px;
+  background: #fff; color: #0b0b0a; font-family: var(--sans); font-style: normal; font-size: 12px; line-height: 1.4; text-align: left;
+  box-shadow: 0 12px 30px -10px rgba(0,0,0,.7); opacity: 0; pointer-events: none; transition: opacity .2s ease, transform .2s ease; }
+.circuit__aid-info:hover .circuit__aid-tip, .circuit__aid-info:focus-visible .circuit__aid-tip { opacity: 1; transform: translate(-50%, 0); }
+.circuit__aid-info:focus-visible { outline: 2px solid #7aa2ff; outline-offset: 2px; }
+
+.circuit--v5 .circuit__skills { gap: clamp(8px, 1.3vh, 12px); }
+.circuit--v5 .skill { min-height: clamp(54px, 7.4vh, 68px); padding: 8px 16px 8px 10px; gap: 14px; border-radius: 16px; background: rgba(255,255,255,.035); border-color: rgba(255,255,255,.11); }
+.circuit--v5 .skill__icon { width: clamp(38px, 5vh, 46px); height: clamp(38px, 5vh, 46px); border-radius: 12px; }
+.circuit--v5 .skill b { white-space: normal; font-size: clamp(13.5px, 1.05vw, 15.5px); line-height: 1.3; }
+.circuit--v5 .circuit__note { margin-top: clamp(18px, 2.8vh, 26px); padding-top: clamp(14px, 2vh, 20px); font-size: clamp(14px, 1.1vw, 16px); }
+.circuit--v5 .circuit__note b { color: #fff; }
+.circuit__dot { fill: #7aa2ff; filter: drop-shadow(0 0 4px rgba(122,162,255,.95)); }
+.circuit__pin--skill { fill: #3b6dff; stroke: #a9c1ff; stroke-width: 1.2; filter: drop-shadow(0 0 4px rgba(59,109,255,.9)); }
+.circuit--v5 .circuit__trace { stroke: rgba(122,162,255,.38); stroke-width: 1.5; }
+.js .slide:not(.is-in) .circuit__card, .js .slide:not(.is-in) .circuit__aid { opacity: 0; transform: translateY(10px); }
+.js .slide.is-in .circuit__card { transition: opacity .6s ease .1s, transform .7s cubic-bezier(.2,.8,.2,1) .1s; }
+.js .slide.is-in .circuit__aid { transition: opacity .6s ease .45s, transform .7s cubic-bezier(.2,.8,.2,1) .45s; }
+
+@media (max-width: 1024px) { .circuit--v5 { width: 100%; } }
+@media (max-width: 560px) {
+  .circuit--v5 { grid-template-columns: 1fr; row-gap: 22px; }
+  .circuit--v5 .circuit__side { align-items: center; gap: 14px; }
+  .circuit--v5 .circuit__card { width: min(260px, 100%); }
+  .circuit--v5 .circuit__aid { margin-left: 0; }
+  .circuit--v5 .circuit__skills { grid-template-columns: 1fr; }
+}
+/* foto larga: a imagem preenche o quadro 1.4:1 em vez de impor o próprio formato quadrado */
+.circuit__photo--wide img { position: absolute; inset: 2.5px; width: calc(100% - 5px); height: calc(100% - 5px); object-fit: cover; }
+@media (max-width: 560px) {
+  .circuit__aid-tip { left: auto; right: -10px; transform: translateY(4px); }
+  .circuit__aid-info:hover .circuit__aid-tip, .circuit__aid-info:focus-visible .circuit__aid-tip { transform: translateY(0); }
+}
+
+/* Foto do card: quadrada e menor, centralizada */
+.circuit__card { width: clamp(176px, 13vw, 206px); padding-top: clamp(14px, 2vh, 18px); }
+.circuit__photo--wide { width: clamp(100px, 13vh, 128px); margin: 0; aspect-ratio: 1; border-radius: 20px; }
+.circuit__photo--wide img { border-radius: 17.5px; object-position: center 25%; }
+
+/* Slider preso em tela baixa (ou navegador com zoom): versão compacta para tudo caber */
+@media (max-height: 720px) {
+  .slide--hs.is-pinned .hs__sticky { padding-top: calc(60px + 6px); padding-bottom: 4px; gap: 2px; }
+  .slide--hs .hs__tab { height: 30px; font-size: 12.5px; }
+  .slide--hs .hs__arrow { width: 34px; height: 34px; font-size: 19px; }
+  .slide--hs.is-pinned .hs__panel { padding-top: 6px; padding-bottom: 4px; }
+  .slide--hs.is-pinned .hs__panel .byline { display: none; }
+  .slide--hs.is-pinned .hs__panel .tags { margin-top: 0; }
+}
+@media (max-height: 720px) {
+  .slide--hs .post-stage { --pw: min(340px, max(200px, 35vh)); }
+  .slide--hs .post { width: min(360px, max(210px, 37vh)); }
+  .slide--hs .reels { width: min(300px, max(180px, 33vh)); }
+  .slide--hs .post__caption { font-size: 12.5px; }
+}
+
+/* Carrosséis das linhas: sem barra de setas embaixo → a peça cresce no espaço liberado
+   e as imagens ficam mais escuras, para o botão "Ampliar" chamar o clique */
+.slide--line .post-stage { --pw: min(410px, max(260px, 45vh)); }
+.slide--line .carousel::before { background: rgba(6,7,12,.62); }
+.slide--line .carousel:hover::before { background: rgba(6,7,12,.5); }
+.slide--line .carousel .zoom-btn { z-index: 3; box-shadow: 0 10px 30px -6px rgba(255,106,26,.7); }
+@media (max-height: 720px) {
+  .slide--hs .post-stage { --pw: min(360px, max(210px, 41vh)); }
+}
+@media (max-width: 760px) {
+  .slide--line .post-stage { --pw: min(330px, calc((100vw - 32px) / 1.18)); }
+}
+
+/* =========================================================
+   Slide "Funil e perfil": o objetivo é alcançar pessoas
+   Topo de funil (vermelho) × fundo de funil (verde) + 2 perfis
+   ========================================================= */
+.slide--funnel { --fn-red: #e3262f; --fn-red-soft: #fdeaea; --fn-green: #16a046; --fn-green-soft: #e6f6eb;
+  padding-top: calc(60px + clamp(14px, 3vh, 34px)); padding-bottom: clamp(14px, 3vh, 34px); }
+.slide--funnel .wrap { max-width: 1440px; }
+.fn-head { text-align: center; max-width: 980px; margin: 0 auto clamp(14px, 3.2vh, 34px); }
+.fn-title { font-family: var(--display); font-weight: 700; letter-spacing: -0.04em; line-height: 1.02; font-size: clamp(32px, min(4vw, 7.4vh), 68px); color: var(--text); text-wrap: balance; }
+.fn-title span { color: var(--fn-red); }
+.fn-lead { margin: clamp(8px, 1.4vh, 14px) auto 0; max-width: 78ch; font-size: clamp(14px, min(1.15vw, 2.2vh), 18px); line-height: 1.45; color: var(--text-2); text-wrap: balance; }
+.fn-lead b { color: var(--text); font-weight: 600; }
+
+.fn-grid { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1.08fr); gap: clamp(28px, 3.6vw, 64px); align-items: center; }
+.fn-links { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; z-index: 0; }
+.fn-col { position: relative; z-index: 1; min-width: 0; }
+.fn-pill { display: inline-flex; align-items: center; height: clamp(30px, 4.4vh, 40px); padding: 0 clamp(14px, 1.2vw, 20px); border-radius: 10px; color: #fff; font-family: var(--display); font-weight: 700; font-size: clamp(15px, min(1.4vw, 2.6vh), 22px); letter-spacing: -0.01em; }
+.fn-pill--red { background: var(--fn-red); }
+.fn-pill--green { background: var(--fn-green); }
+.fn-h { margin-top: clamp(10px, 1.8vh, 18px); font-family: var(--display); font-weight: 700; letter-spacing: -0.035em; line-height: 1.04; font-size: clamp(24px, min(2.6vw, 5vh), 44px); color: var(--text); text-wrap: balance; }
+.fn-p { margin-top: clamp(6px, 1.2vh, 12px); font-size: clamp(14px, min(1.25vw, 2.4vh), 19px); line-height: 1.4; color: var(--text-2); max-width: 30ch; }
+
+.fn-list { list-style: none; margin-top: clamp(14px, 3vh, 34px); }
+.fn-list li { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: clamp(12px, 1.2vw, 18px); align-items: start; padding: clamp(8px, 1.6vh, 16px) 0; border-bottom: 1px solid var(--line); }
+.fn-list li:last-child { border-bottom: 0; }
+.fn-list li > div { display: flex; flex-direction: column; gap: 2px; }
+.fn-list b { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; font-family: var(--display); font-weight: 700; letter-spacing: -0.02em; font-size: clamp(16px, min(1.45vw, 2.7vh), 23px); line-height: 1.1; color: var(--text); }
+.fn-list b em { font-style: normal; font-family: var(--sans); font-size: clamp(9.5px, .72vw, 11px); font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: #fff; background: var(--fn-green); padding: 3px 9px; border-radius: 999px; }
+.fn-list li > div > span { font-size: clamp(13px, min(1.08vw, 2.1vh), 16.5px); line-height: 1.38; color: var(--text-2); }
+.fn-list--green li { padding: clamp(6px, 1.2vh, 13px) 0; }
+.fn-ico { width: clamp(36px, 3vw, 50px); height: clamp(36px, 3vw, 50px); display: grid; place-items: center; border-radius: 12px; }
+.fn-ico svg { width: 72%; height: 72%; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.fn-ico svg .fill { stroke: none; }
+.fn-list--red .fn-ico svg { stroke: var(--fn-red); }
+.fn-list--red .fn-ico svg .fill { fill: var(--fn-red); }
+.fn-list--green .fn-ico { background: var(--fn-green); }
+.fn-list--green .fn-ico svg { stroke: #fff; width: 60%; height: 60%; }
+.fn-list--green .fn-ico svg .fill { fill: #fff; }
+.fn-list--green .fn-ico--ring, .fn-list--green .fn-ico--line { background: transparent; }
+.fn-list--green .fn-ico--ring svg { stroke: var(--fn-green); width: 86%; height: 86%; stroke-width: 2.2; }
+.fn-list--green .fn-ico--ring svg .fill { fill: var(--fn-green); }
+.fn-list--green .fn-ico--line svg { stroke: var(--fn-green); width: 80%; height: 80%; stroke-width: 2.2; }
+
+/* ---- Celulares: tudo em cqw, para encolher proporcionalmente ---- */
+.fn-phones { position: relative; z-index: 1; display: flex; gap: clamp(16px, 2vw, 34px); align-items: center; }
+.fn-phone { width: clamp(190px, min(16vw, 31vh), 290px); container-type: inline-size; aspect-ratio: 1 / 2.02; padding: 3.4cqw; border-radius: 15cqw; background: #0b0b0a;
+  box-shadow: 0 0 0 1.4cqw #2a2a2a inset, 0 30px 60px -24px rgba(20,20,40,.45); }
+.fn-screen { position: relative; height: 100%; overflow: hidden; border-radius: 12cqw; background: #fff; padding: 17cqw 6cqw 0; color: #0b0b0a; }
+.fn-notch { position: absolute; top: 4.6cqw; left: 50%; transform: translateX(-50%); width: 32cqw; height: 9cqw; border-radius: 99px; background: #0b0b0a; }
+.fn-ig-top { display: flex; align-items: center; gap: 1.6cqw; font-size: 5.6cqw; }
+.fn-ig-top .vbadge { width: 4.6cqw; height: 4.6cqw; }
+.fn-ig-top .vbadge svg { width: 100%; height: 100%; display: block; }
+.fn-ig-head { display: flex; align-items: center; gap: 4cqw; margin-top: 4.4cqw; }
+.fn-ig-logo { flex: none; width: 21cqw; height: 21cqw; border-radius: 50%;
+  background: radial-gradient(circle, var(--accent) 0 9%, transparent 10%), radial-gradient(circle, transparent 0 26%, #fff 27% 33%, transparent 34%), #0b0b0a; box-shadow: 0 0 0 .9cqw #fff, 0 0 0 1.6cqw #1d1d1d; }
+.fn-ig-stats { flex: 1; display: flex; justify-content: space-around; text-align: center; }
+.fn-ig-stats span { display: flex; flex-direction: column; font-size: 3.7cqw; color: #3b3a37; line-height: 1.2; }
+.fn-ig-stats b { font-size: 5.4cqw; color: #0b0b0a; }
+.fn-ig-bio { margin-top: 4cqw; font-size: 3.9cqw; line-height: 1.38; color: #3b3a37; }
+.fn-ig-bio b { color: #0b0b0a; }
+.fn-ig-bio span { color: #1d4fd8; font-weight: 600; }
+.fn-ig-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 2.6cqw; margin-top: 3.6cqw; }
+.fn-ig-btns span { display: grid; place-items: center; height: 10cqw; border-radius: 2.6cqw; background: #efefef; font-size: 4.2cqw; font-weight: 700; }
+.fn-ig-btns .is-blue { background: #1f5eff; color: #fff; }
+.fn-ig-hl { display: flex; justify-content: space-between; margin-top: 4.4cqw; }
+.fn-ig-hl span { display: flex; flex-direction: column; align-items: center; gap: 1.4cqw; font-size: 3.3cqw; color: #3b3a37; }
+.fn-ig-hl i { width: 14.5cqw; height: 14.5cqw; border-radius: 50%; background: #f2f2f2; border: .5cqw solid #e2e2e2; box-shadow: inset 0 0 0 1cqw #fff; }
+.fn-ig-hl i.is-green { background: var(--fn-green); border-color: var(--fn-green); }
+.fn-ig-hl span:has(.is-green) { color: #0b0b0a; font-weight: 600; }
+.fn-ig-tabs { display: flex; justify-content: space-around; margin: 3.6cqw -6cqw 0; padding: 2cqw 0; }
+.fn-ig-tabs svg { width: 6.4cqw; height: 6.4cqw; fill: none; stroke: #3b3a37; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.fn-ig-tabs svg .fill { fill: #3b3a37; stroke: none; }
+.fn-ig-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: .6cqw; margin: 0 -6cqw; }
+.fn-cell { aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.6cqw; background: var(--fn-red); color: #fff;
+  font-family: var(--display); font-weight: 700; font-size: 4.1cqw; line-height: 1.05; text-transform: uppercase; text-align: center; letter-spacing: -0.01em; }
+.fn-cell svg { width: 7.4cqw; height: 7.4cqw; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.fn-cell svg .fill { fill: #fff; stroke: none; }
+.fn-cell--green { background: var(--fn-green); }
+.fn-ig-grid--empty span { aspect-ratio: 1; background: #ececec; }
+.fn-ig-cta { position: absolute; left: 5cqw; right: 5cqw; bottom: 9cqw; display: flex; align-items: center; gap: 3cqw; height: 13cqw; padding: 0 4cqw; border-radius: 3cqw;
+  background: var(--fn-green); color: #fff; font-size: 4.6cqw; font-weight: 700; box-shadow: 0 3cqw 7cqw -2cqw rgba(22,160,70,.6); }
+.fn-ig-cta svg { width: 6cqw; height: 6cqw; fill: none; stroke: #fff; stroke-width: 2.2; stroke-linecap: round; }
+.fn-ig-cta i { margin-left: auto; font-style: normal; font-size: 7cqw; line-height: 1; }
+
+/* ---- Ligações desenhadas pelo main.js ---- */
+.fn-bracket { fill: none; stroke: var(--fn-red); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.fn-wire { fill: none; stroke: var(--fn-green); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.fn-wire-dot { fill: var(--fn-green); }
+.js .slide:not(.is-in) .fn-links path { stroke-dasharray: 100; stroke-dashoffset: 100; }
+.js .slide.is-in .fn-links path { stroke-dasharray: 100; stroke-dashoffset: 0; transition: stroke-dashoffset 1.1s cubic-bezier(.2,.7,.2,1) .5s; }
+
+@media (max-width: 1180px) {
+  .fn-grid { grid-template-columns: 1fr 1fr; }
+  .fn-phones { grid-column: 1 / -1; grid-row: 2; justify-content: center; }
+  .fn-links { display: none; }
+}
+@media (max-width: 760px) {
+  .fn-grid { grid-template-columns: 1fr; }
+  .fn-phones { grid-row: auto; gap: 12px; }
+  .fn-phone { width: calc((100vw - 2 * var(--pad-x) - 12px) / 2); }
+  .fn-col--bottom { order: 3; }
+}
+/* moldura do celular em proporção da largura (cqw só vale para os elementos de dentro) */
+.fn-phone { --pw: clamp(190px, min(16vw, 31vh), 290px); width: var(--pw); padding: calc(var(--pw) * .034); border-radius: calc(var(--pw) * .15);
+  box-shadow: 0 0 0 calc(var(--pw) * .012) #2a2a2a inset, 0 30px 60px -24px rgba(20,20,40,.45); }
+@media (max-width: 760px) { .fn-phone { --pw: calc((100vw - 2 * var(--pad-x) - 12px) / 2); } }
+/* as linhas verdes passam por cima do celular até o destaque e o botão */
+.fn-links { z-index: 2; }
+/* perfil mais compacto, para a grade 3×3 do 1º celular aparecer inteira */
+.fn-phone { aspect-ratio: 1 / 2.1; }
+.fn-screen { padding-top: 15cqw; }
+.fn-ig-head { margin-top: 3.4cqw; }
+.fn-ig-logo { width: 18cqw; height: 18cqw; }
+.fn-ig-bio { margin-top: 3cqw; }
+.fn-ig-btns { margin-top: 3cqw; }
+.fn-ig-btns span { height: 9cqw; }
+.fn-ig-hl { margin-top: 3.4cqw; }
+.fn-ig-hl i { width: 12.5cqw; height: 12.5cqw; }
+.fn-ig-tabs { margin-top: 2.4cqw; padding: 1.6cqw 0; }
+
+/* Referências: imagem sem a faixa de views + views escritas embaixo do card */
+.ref__media { aspect-ratio: 2 / 3; background: #0b0b0a; }
+.ref--empty .ref__media { background: var(--surface); }
+.ref__media img { object-position: center top; }
+.ref__info .ref__count { display: inline-flex; align-items: center; gap: 7px; font-size: clamp(14px, 1.05vw, 16px); font-weight: 600; color: var(--text); }
+.ref__count svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+.ref__info .ref__count + b { margin-top: 4px; }
+.ref__info .ref__count { align-items: flex-start; font-size: clamp(12.5px, .8vw, 14.5px); line-height: 1.3; }
+.ref__count svg { width: 16px; height: 16px; margin-top: 1px; }
+
+/* Índice lateral: os nomes escondidos não ocupam espaço (antes, cobriam e "roubavam" cliques do conteúdo à esquerda) */
+.sidenav a { gap: 0; }
+.sidenav a span { max-width: 0; overflow: hidden; }
+.sidenav:hover a, .sidenav:focus-within a { gap: 10px; }
+.sidenav:hover a span, .sidenav:focus-within a span { max-width: 280px; }
+/* Referências: imagem inteira (com os números originais), sem cortar nada */
+.ref__media { aspect-ratio: 9 / 16; }
+.ref__media img { object-fit: contain; object-position: center; }
+@media (max-height: 820px) and (min-width: 761px) { .ref__media { max-height: 37vh; } }
+
+/* =========================================================
+   Funil em dois slides, um embaixo do outro, cada um centralizado:
+   (1) topo de funil + perfil com a grade · (2) perfil com Newsletter + fundo de funil
+   ========================================================= */
+.fn-grid--top, .fn-grid--bottom { justify-content: center; gap: clamp(56px, 7vw, 140px); }
+.fn-grid--top { grid-template-columns: minmax(0, 520px) auto; }
+.fn-grid--bottom { grid-template-columns: auto minmax(0, 600px); }
+.fn-grid--top .fn-p { max-width: 34ch; }
+.slide--funnel-b { padding-top: calc(60px + clamp(20px, 4vh, 48px)); }
+.slide--funnel-b .fn-phone { --pw: clamp(210px, min(18vw, 36vh), 320px); }
+@media (max-width: 1180px) {
+  .fn-grid--top, .fn-grid--bottom { grid-template-columns: 1fr; gap: 28px; }
+  .fn-grid--top .fn-phones, .fn-grid--bottom .fn-phones { grid-column: auto; grid-row: auto; justify-content: center; }
+  .fn-grid--bottom .fn-col--bottom { order: -1; }
+}
+@media (max-width: 760px) {
+  .fn-phone, .slide--funnel-b .fn-phone { --pw: min(300px, 72vw); }
+}
+
+/* =========================================================
+   Slide 04 · "Criei 4 linhas editoriais." (texto, sem cards)
+   A assinatura fica na mesma coluna do texto, alinhada ao grid.
+   ========================================================= */
+.ed-intro { max-width: 900px; margin: 0 auto; }
+.ed-intro .byline { margin-bottom: clamp(28px, 5vh, 56px); }
+.ed-eyebrow { display: flex; align-items: center; gap: 24px; font-family: var(--sans); font-size: clamp(12px, .95vw, 14px); font-weight: 500; letter-spacing: .22em; text-transform: uppercase; color: var(--text-2); }
+.ed-eyebrow::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,.28); }
+.ed-title { margin: clamp(14px, 2.6vh, 26px) 0 clamp(18px, 3.4vh, 34px); font-family: var(--sans); font-weight: 400; letter-spacing: -0.035em; line-height: 1.02; font-size: clamp(40px, min(5.4vw, 10vh), 84px); color: var(--text); }
+.ed-body p { font-size: clamp(16px, min(1.45vw, 2.6vh), 22px); line-height: 1.38; color: var(--text); max-width: 64ch; text-wrap: pretty; }
+.ed-body p + p { margin-top: clamp(14px, 2.6vh, 26px); }
+.ed-close { margin-top: clamp(22px, 4.2vh, 44px); padding-top: clamp(18px, 3.4vh, 34px); border-top: 1px solid rgba(255,255,255,.4); font-size: clamp(17px, min(1.5vw, 2.7vh), 23px); font-weight: 600; line-height: 1.35; color: var(--text); }
+/* Slide 04: parágrafos com menos contraste, para a headline se destacar */
+.ed-body p { color: rgba(244,243,239,.62); }
+
+/* Slide "Criei 4 linhas editoriais." em light mode */
+.slide--ed .ed-eyebrow { color: var(--text-2); }
+.slide--ed .ed-eyebrow::after { background: var(--line-strong); }
+.slide--ed .ed-title { color: var(--text); }
+.slide--ed .ed-body p { color: #6f6d68; }
+.slide--ed .ed-close { color: var(--text); border-top-color: var(--line-strong); }
+
+/* Sem cabeçalho: fica só o contador de páginas no canto superior direito */
+.topbar, html.theme-dark .topbar { background: transparent; border-bottom: 0; backdrop-filter: none; -webkit-backdrop-filter: none; pointer-events: none; }
+.topbar .brand, .topbar__label, .topbar .progress { display: none; }
+.topbar__count { grid-column: 3; }
+@media (max-width: 760px) { .topbar__count { grid-column: 2; } }
+
+/* Popup do vídeo: link "Abrir no YouTube" logo abaixo do player */
+.lightbox__video { position: relative; overflow: visible; }
+.lightbox__video iframe { border-radius: 16px; }
+.lightbox__yt { position: absolute; left: 50%; top: calc(100% + 12px); transform: translateX(-50%); white-space: nowrap;
+  display: inline-flex; align-items: center; height: 34px; padding: 0 14px; border-radius: 999px; background: rgba(255,255,255,.12); color: #fff; font-size: 13px; font-weight: 600; }
+.lightbox__yt:hover { background: rgba(255,255,255,.2); }
+
+/* Fundo de funil: o link da bio de verdade é o destino da linha "Link na bio" */
+.fn-ig-bio .fn-ig-link { color: var(--fn-green); font-weight: 700; text-decoration: underline; text-decoration-thickness: .5cqw; text-underline-offset: .8cqw; }
+/* 1º post do feed (fixado) em verde, mesmo dentro da grade vazia */
+.fn-ig-grid--empty .fn-cell--green { background: var(--fn-green); }
+
+/* Slide "A frequência será definida pela performance." (mesmo layout do slide das linhas, no escuro) */
+.ed-title--md { font-size: clamp(36px, min(4.6vw, 8.6vh), 72px); line-height: 1.04; max-width: 17ch; text-wrap: balance; }
+.slide--ed-dark .ed-body p { color: rgba(244,243,239,.62); }
+.slide--ed-dark .ed-close { border-top-color: rgba(255,255,255,.22); }
+.ed-title--md { max-width: 24ch; }
+
+/* Encerramento em dark mode: o brilho colorido de fundo fica mais discreto */
+.slide--close.slide--dark .orb--center { opacity: .22; filter: blur(40px) saturate(1.2); }
+.slide--close.slide--dark .close__quote { color: var(--text); }
+
+/* Encerramento: fundo animado "Wave Mesh" (canvas desenhado pelo main.js) */
+.slide--wave { isolation: isolate; }
+.slide--wave .wave-mesh { position: absolute; inset: 0; width: 100%; height: 100%; display: block; z-index: 0; pointer-events: none; }
+.slide--wave .wrap { z-index: 1; }
+.slide--wave .close__quote, .slide--wave .close__who { text-shadow: 0 2px 16px rgba(6,7,10,.95), 0 0 2px rgba(6,7,10,.8); }
+/* headline com a 2ª parte mais suave */
+.ed-title__soft { color: rgba(244,243,239,.5); }
+.slide--ed .ed-title__soft { color: var(--muted); }
+.ed-title--md { max-width: 26ch; }
+
+/* Linhas editoriais sem a coluna "Outros posts similares": só texto + peça */
+.slide--line .line-grid { grid-template-columns: minmax(0, 560px) auto; justify-content: space-between; }
+
+/* ---------- Botão de idioma (EN | PT) no topo, ao lado do contador ---------- */
+.topbar__right { grid-column: 3; justify-self: end; display: flex; align-items: center; gap: 16px; pointer-events: auto; }
+.topbar__right .topbar__count { grid-column: auto; }
+.lang-switch { display: inline-flex; padding: 3px; border-radius: 999px; border: 1px solid var(--line-strong); background: color-mix(in srgb, var(--bg) 70%, transparent); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+.lang-switch__btn { height: 26px; min-width: 38px; padding: 0 10px; border-radius: 999px; font-family: var(--mono); font-size: 11px; letter-spacing: .08em; color: var(--muted); transition: background .2s ease, color .2s ease; }
+.lang-switch__btn:hover { color: var(--text); }
+.lang-switch__btn.is-on { background: var(--ink); color: var(--on-ink); }
+.lang-switch__btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+@media (max-width: 760px) { .topbar__right { grid-column: 2; gap: 10px; } }
+
+/* =========================================================
+   Slide 4 · "Frequência alta. Conteúdo com critério." + 5 critérios
+   ========================================================= */
+.fq { --fq-green: #3ddc84; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 560px); gap: clamp(28px, 5vh, 56px) clamp(40px, 5vw, 88px); align-items: center; }
+.fq-copy .byline { margin-bottom: clamp(26px, 5vh, 52px); }
+.fq-title { margin-top: 0; font-size: clamp(36px, min(4.4vw, 8.4vh), 68px); max-width: none; }
+.fq-lead { font-size: clamp(16px, min(1.5vw, 2.7vh), 22px); line-height: 1.45; color: rgba(244,243,239,.62); max-width: 40ch; text-wrap: pretty; }
+.fq-side { display: flex; flex-direction: column; gap: clamp(16px, 3vh, 28px); }
+.fq-callout { display: flex; align-items: center; gap: 18px; padding: clamp(14px, 2.4vh, 20px) 22px; border-radius: 18px;
+  border: 1px solid rgba(61,220,132,.5); background: linear-gradient(135deg, rgba(61,220,132,.12), rgba(61,220,132,.03));
+  box-shadow: 0 0 40px -18px rgba(61,220,132,.6); font-size: clamp(14px, min(1.2vw, 2.2vh), 17.5px); line-height: 1.45; color: rgba(244,243,239,.88); }
+.fq-callout__ico { flex: none; width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; background: rgba(61,220,132,.14); }
+.fq-callout__ico svg { width: 26px; height: 26px; fill: none; stroke: var(--fq-green); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.fq-cards { list-style: none; display: flex; flex-wrap: wrap; justify-content: center; gap: clamp(14px, 2.2vh, 22px) clamp(14px, 1.6vw, 24px); }
+.fq-card { width: clamp(132px, 10.4vw, 168px); min-height: clamp(96px, 14vh, 118px); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 14px 10px;
+  border-radius: 18px; border: 1px solid rgba(140,160,200,.18); background: linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.015)); text-align: center; }
+.fq-card b { font-size: clamp(14px, 1.1vw, 17px); font-weight: 700; color: #fff; }
+.fq-card__ico svg { display: block; width: 38px; height: 38px; fill: none; stroke: var(--fq-green); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 0 8px rgba(61,220,132,.35)); }
+.fq-card__ico--ring { width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; background: rgba(61,220,132,.14); border: 1px solid rgba(61,220,132,.35); }
+.fq-card__ico--ring svg { width: 24px; height: 24px; }
+.fq-card__ico svg .fill { fill: none; stroke: var(--fq-green); }
+.fq-close { grid-column: 1 / -1; margin-top: 0; }
+@media (max-width: 1024px) {
+  .fq { grid-template-columns: 1fr; }
+  .fq-side { max-width: 620px; }
+}
+@media (max-width: 560px) {
+  .fq-card { width: calc(50% - 8px); }
+}
+/* headline do slide 4 em duas linhas também em português */
+.fq { grid-template-columns: minmax(0, 1fr) minmax(0, 520px); column-gap: clamp(36px, 4.4vw, 72px); }
+.fq-title { font-size: clamp(34px, min(3.7vw, 7.4vh), 60px); }
+
+/* Peças das linhas: imagem mais escura para o botão "View/Ampliar" ganhar contraste */
+.slide--line .carousel::before, .slide--line .post__media::before { background: rgba(6,7,12,.74); }
+.slide--line .carousel:hover::before, .slide--line .post__media:hover::before { background: rgba(6,7,12,.64); }
+
+/* Peças das linhas: a MOLDURA INTEIRA (post, cabeçalho, ícones, legenda e slides de trás) fica
+   mais apagada; só o botão "View/Ampliar · Assistir" fica em destaque por cima */
+.slide--line .carousel::before, .slide--line .post__media::before { background: rgba(6,7,12,.3); }
+.slide--line .carousel:hover::before, .slide--line .post__media:hover::before { background: rgba(6,7,12,.2); }
+.slide--line .line-media .post::after,
+.slide--line .line-media .reels::after { content: ''; position: absolute; inset: 0; border-radius: inherit; background: rgba(6,7,12,.58); z-index: 5; pointer-events: none; transition: background .25s ease; }
+.slide--line .line-media .post:hover::after,
+.slide--line .line-media .reels:hover::after { background: rgba(6,7,12,.46); }
+.slide--line .line-media .zoom-btn { z-index: 6; }
+.slide--line .line-media .ghost { opacity: .38; }
