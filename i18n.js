@@ -78,7 +78,7 @@
     '204 mil visualizações': '204K views',
     '3,2 mi de visualizações': '3.2M views',
     '2,8 mi de visualizações': '2.8M views',
-    '1.788 curtidas e 12 comentários': '1,788 likes and 12 comments',
+    '91 mil curtidas e 2.444 comentários': '91K likes and 2,444 comments',
     '748 mil visualizações': '748K views',
     '1,3 mi de visualizações': '1.3M views',
 

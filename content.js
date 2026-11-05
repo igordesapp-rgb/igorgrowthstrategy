@@ -79,7 +79,7 @@ window.STOX_CONTENT = {
       { image: 'assets/ref-01.webp', brand: '', handle: '', views: '204 mil visualizações' },
       { image: 'assets/ref-02.webp', brand: '', handle: '', views: '3,2 mi de visualizações' },
       { image: 'assets/ref-07.webp', brand: '', handle: '', views: '2,8 mi de visualizações' },
-      { image: 'assets/ref-04.webp', brand: 'Finshots', handle: '', views: '1.788 curtidas e 12 comentários' },
+      { image: 'assets/ref-09.webp', brand: '', handle: '', views: '91 mil curtidas e 2.444 comentários' },
       { image: 'assets/ref-05.webp', brand: '', handle: '', views: '748 mil visualizações' },
       { image: 'assets/ref-08.webp', brand: '', handle: '', views: '1,3 mi de visualizações' },
     ],
